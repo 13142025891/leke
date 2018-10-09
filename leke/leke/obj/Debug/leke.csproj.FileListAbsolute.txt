@@ -1,0 +1,10 @@
+C:\MyWork\workspace\leke\leke\leke\bin\Debug\leke.exe.config
+C:\MyWork\workspace\leke\leke\leke\bin\Debug\leke.exe
+C:\MyWork\workspace\leke\leke\leke\bin\Debug\leke.pdb
+C:\MyWork\workspace\leke\leke\leke\obj\Debug\leke.csprojAssemblyReference.cache
+C:\MyWork\workspace\leke\leke\leke\obj\Debug\leke.csproj.CoreCompileInputs.cache
+C:\MyWork\workspace\leke\leke\leke\obj\Debug\leke.exe
+C:\MyWork\workspace\leke\leke\leke\obj\Debug\leke.pdb
+C:\MyWork\workspace\leke\leke\leke\bin\Debug\Newtonsoft.Json.dll
+C:\MyWork\workspace\leke\leke\leke\bin\Debug\Newtonsoft.Json.xml
+C:\MyWork\workspace\leke\leke\leke\obj\Debug\leke.csproj.CopyComplete
