@@ -17,11 +17,13 @@ namespace leke
         public static void Do(User u, string cookie)
         {
             Log(ConsoleColor.Green, $"{u.Account} 已开始刷任务，请等待。。。");
+            WeiXinHelper.SendText(u.Account, $"{u.Account} 已经登录成功，开始刷任务请等待。。。");
             while (true)
             {
                 if (!Main.isRun)
                 {
                     Log(ConsoleColor.White, $"{u.Account} 已停止！");
+                    WeiXinHelper.SendText(u.Account, $"{u.Account} 已停止刷任务。");
                     break;
                 }
                 //if (u.IsComplete)
@@ -36,29 +38,31 @@ namespace leke
                     if (r.code == "1")
                     {
                         //u.IsComplete = true;
-                        Main.a1.Invoke($"{u.Account}   {r.msgs}");
+                        //Main.a1.Invoke($"{u.Account}   {r.msgs}");
                         Log(ConsoleColor.Green, $"{u.Account}   {r.msgs}");
-                        System.Threading.Thread.Sleep(1000 * 60*2);
+                        WeiXinHelper.SendText(u.Account, $"{u.Account}  已经刷到任务，马上去做吧！");
+                        System.Threading.Thread.Sleep(1000 * 60*5);
                     }
                     else if (r.msgs.Contains("您还有进行中的任务没完成")|| r.msgs.Contains("评价"))
                     {
-                        Main.a1.Invoke($"{u.Account}   {r.msgs}");
-                        if(!u.IsComplete)
+                        //Main.a1.Invoke($"{u.Account}   {r.msgs}");
+                        WeiXinHelper.SendText(u.Account, $"{u.Account}   {r.msgs}，快去完成吧别错过了！");
+                        if (!u.IsComplete)
                         {
                             Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
                         }
                         u.IsComplete = true;
-                        System.Threading.Thread.Sleep(1000 * 60*2);
+                        System.Threading.Thread.Sleep(1000 * 60*5);
                     }
                     else if (r.msgs.Contains("已上限"))
                     {
-                        Main.a1.Invoke($"{u.Account}   {r.msgs}");
-                        if (u.IsComplete)
-                        {
-                            Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
-                        }
-                        u.IsComplete = false;
-                        System.Threading.Thread.Sleep(1000 * 60*60*1);
+                        //Main.a1.Invoke($"{u.Account}   {r.msgs}");
+                       
+                         Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
+                         WeiXinHelper.SendText(u.Account, $"{u.Account}   {r.msgs}！加油！");
+                         u.IsComplete = false;
+                        
+                        System.Threading.Thread.Sleep(1000 * 60*60*3);
                     }
                     else
                     {
@@ -100,6 +104,7 @@ namespace leke
                 if (!Main.isRun)
                 {
                     Log(ConsoleColor.White, $"{account} 已停止！");
+                    WeiXinHelper.SendText(u.Account, $"{u.Account} 已停止刷任务。");
                     return;
                 }
 

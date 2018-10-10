@@ -59,9 +59,12 @@ namespace leke
         }
         private void button1_Click(object sender, EventArgs e)
         {
-           
-
-            //显示时间，标题Tip，显示文本，显示标号
+            if (CacheHelper.Token == null || string.IsNullOrEmpty(CacheHelper.Token.msgs))
+            {
+                helper.Log(ConsoleColor.Red, "企业微信，通信出错请检查！");
+                return;
+            }
+            
 
             if (!isRun)
             {

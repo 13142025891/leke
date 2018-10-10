@@ -14,6 +14,8 @@ namespace leke
         public static string cookie;
         static void Main(string[] args)
         {
+
+            WeiXinHelper.SendText("14789877365", $" 已停止刷任务。");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Console.Title = "运行后，点我可以看到实时进度";
