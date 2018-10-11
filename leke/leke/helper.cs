@@ -26,11 +26,7 @@ namespace leke
                     WeiXinHelper.SendText(u.Account, $"{u.Account} 已停止刷任务。");
                     break;
                 }
-                //if (u.IsComplete)
-                //{
-                //    Log(ConsoleColor.White, $"{u.Account} 已经刷到任务请去完成或者有！");
-                //    System.Threading.Thread.Sleep(1000 * 60);
-                //}
+                
                 var r = new Msg();
                 try
                 {
@@ -66,6 +62,7 @@ namespace leke
                     }
                     else
                     {
+                        Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
                         u.IsComplete = false;
                         System.Threading.Thread.Sleep(Main.Interval);
                     }

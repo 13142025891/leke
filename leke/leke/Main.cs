@@ -34,7 +34,7 @@ namespace leke
                 {
                     while (true)
                     {
-                        System.Threading.Thread.Sleep(1000*60*60*6);
+                        System.Threading.Thread.Sleep(1000*60*10);
                         Console.Clear();
 
                     }
