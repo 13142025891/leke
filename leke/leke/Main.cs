@@ -65,7 +65,7 @@ namespace leke
 
         void MessageBoxShow_F(string msg)
         {
-            this.notifyIcon1.ShowBalloonTip(5000, "Tip", msg, ToolTipIcon.Info);
+            
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -146,19 +146,6 @@ namespace leke
             }
 
 
-        }
-
-        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (this.Visible)
-            {
-                this.Hide();
-            }
-            else
-            {
-                this.Show();
-
-            }
         }
     }
 }
