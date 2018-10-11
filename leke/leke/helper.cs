@@ -37,13 +37,14 @@ namespace leke
                         //Main.a1.Invoke($"{u.Account}   {r.msgs}");
                         Log(ConsoleColor.Green, $"{u.Account}   {r.msgs}");
                         WeiXinHelper.SendText(u.Account, $"{u.Account}  已经刷到任务，马上去做吧！");
+                        WeiXinHelper.CreateLog(u.Account, $"{u.Account}  已经刷到任务，马上去做吧！", 1);
                         System.Threading.Thread.Sleep(1000 * 60*5);
                     }
                     else if (r.msgs.Contains("您还有进行中的任务没完成")|| r.msgs.Contains("评价"))
                     {
                         //Main.a1.Invoke($"{u.Account}   {r.msgs}");
                         WeiXinHelper.SendText(u.Account, $"{u.Account}   {r.msgs}，快去完成吧别错过了！");
-                        
+                        WeiXinHelper.CreateLog(u.Account, $"{u.Account}   {r.msgs}，快去完成吧别错过了！", 1);
                         if (!u.IsComplete)
                         {
                             Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
