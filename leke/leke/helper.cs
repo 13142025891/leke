@@ -43,6 +43,7 @@ namespace leke
                     {
                         //Main.a1.Invoke($"{u.Account}   {r.msgs}");
                         WeiXinHelper.SendText(u.Account, $"{u.Account}   {r.msgs}，快去完成吧别错过了！");
+                        
                         if (!u.IsComplete)
                         {
                             Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
@@ -54,15 +55,17 @@ namespace leke
                     {
                         //Main.a1.Invoke($"{u.Account}   {r.msgs}");
                        
-                         Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
-                         WeiXinHelper.SendText(u.Account, $"{u.Account}   {r.msgs}！加油！");
+                        Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
+                        WeiXinHelper.CreateLog(u.Account, $"{u.Account}   {r.msgs}", 1);
+                        WeiXinHelper.SendText(u.Account, $"{u.Account}   {r.msgs}！加油！");
                          u.IsComplete = false;
                         
                         System.Threading.Thread.Sleep(1000 * 60*60*3);
                     }
                     else
                     {
-                        Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
+                        //Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
+                        WeiXinHelper.CreateLog(u.Account, $"{u.Account}   {r.msgs}", 1);
                         u.IsComplete = false;
                         System.Threading.Thread.Sleep(Main.Interval);
                     }
@@ -70,11 +73,13 @@ namespace leke
                 catch (WebException er)
                 {
                     Log(ConsoleColor.Red, $"{u.Account} 刷任务出错，error: {er.Message} ");
+                    WeiXinHelper.CreateLog(u.Account, $"{u.Account} 刷任务出错，error: {er.Message} ", 2);
                     System.Threading.Thread.Sleep(1000 * 5);
                 }
                 catch(Exception e)
                 {
                     Log(ConsoleColor.Red, $"{u.Account} 返回出错，error: {e.Message} ");
+                    WeiXinHelper.CreateLog(u.Account, $"{u.Account} 返回出错，error: {e.Message} ", 2);
                     System.Threading.Thread.Sleep(5000);
                 }
 
@@ -183,10 +188,19 @@ namespace leke
             catch (WebException er)
             {
                 Log(ConsoleColor.Red, $"{account} 登录失败，等待重新登录。。。，error: {er.Message} ");
+                WeiXinHelper.CreateLog(account, $"{account} 登录失败，等待重新登录。。。，error: {er.Message} ", 2);
                 System.Threading.Thread.Sleep(3000);
                 Log(ConsoleColor.Yellow, $"{account} 开始重新登录。。。");
+                WeiXinHelper.CreateLog(account, $"{account} 开始重新登录。。。", 2);
                 Login(u);
+                
 
+            }
+            catch (Exception e)
+            {
+                Log(ConsoleColor.Red, $"{u.Account} 出错，error: {e.Message} ");
+                WeiXinHelper.CreateLog(u.Account, $"{u.Account} 返回出错，error: {e.Message} ", 2);
+                System.Threading.Thread.Sleep(3000);
             }
         }
 

@@ -1,10 +1,12 @@
 ﻿using leke.entity;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,9 +44,17 @@ namespace leke
                 catch (Exception ex)
                 {
                     helper.Log(ConsoleColor.Red, "★★★★★" + ex);
+                    WeiXinHelper.CreateLog("main", "★★★★★" + ex, 2);
                 }
             });
-            //Invoke(a1, new object[] {  });
+            var str = File.ReadAllText("Users.json");
+            var lst = JsonConvert.DeserializeObject<List<User>>(str);
+            var sb = new StringBuilder();
+            foreach (var m in lst)
+            {
+                sb.AppendLine($"{m.Account},{m.Pass}");
+            }
+            this.textBox1.Text = sb.ToString();
         }
         public void ShowMessage(string msg)
         {
@@ -62,6 +72,7 @@ namespace leke
             if (CacheHelper.Token == null || string.IsNullOrEmpty(CacheHelper.Token.msgs))
             {
                 helper.Log(ConsoleColor.Red, "企业微信，通信出错请检查！");
+                WeiXinHelper.CreateLog("weixin", $"企业微信获取token出错", 2);
                 return;
             }
             
@@ -105,6 +116,7 @@ namespace leke
                                 }
                                 catch (Exception ex)
                                 {
+                                    WeiXinHelper.CreateLog(u.Account, "★★★★★" + ex, 2);
                                     helper.Log(ConsoleColor.Red, "★★★★★" + ex);
                                 }
                             });

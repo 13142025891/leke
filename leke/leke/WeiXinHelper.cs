@@ -126,15 +126,27 @@ namespace leke
                 {
                     postResult = "账号" + paramData.touser + "在OA中不存在!";
                 }
-                CreateLog(DateTime.Now.ToString("yyyy-MM-dd HH:mm:sss") + ":\t" + item + "\t" + param + "\t" + postResult);
+                CreateLog("weixin",DateTime.Now.ToString("yyyy-MM-dd HH:mm:sss") + ":\t" + item + "\t" + param + "\t" + postResult,0);
             }
         }
 
-        private static void CreateLog(string strlog)
+        public static void CreateLog(string dire,string strlog,int Type)
         {
-            string str1 = "QYWeixin_log" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
+            string str1 = "QYWeixin_log-" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
+            if (Type == 1)
+            {
+                str1 = "info-" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
+            }
+            else if (Type == 2)
+            {
+                str1 = "error-" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
+            }
+            if (Type != 0)
+            {
+                strlog = $"{DateTime.Now.ToString("yyyyMMdd HH:mm:ss")} {strlog}";
+            }
             //BS CS应用日志自适应
-            string path = System.Web.HttpContext.Current == null ? Path.GetFullPath("..") + "\\temp\\" : System.Web.HttpContext.Current.Server.MapPath("temp");
+            string path = System.Web.HttpContext.Current == null ? Path.GetFullPath(".") + $"\\log\\{dire}\\" : System.Web.HttpContext.Current.Server.MapPath("temp");
             try
             {
                 if (!Directory.Exists(path))
