@@ -52,6 +52,17 @@ namespace leke
                         u.IsComplete = true;
                         System.Threading.Thread.Sleep(1000 * 60*5);
                     }
+                    else if (r.msgs.Contains("关闭任务"))
+                    {
+                        //Main.a1.Invoke($"{u.Account}   {r.msgs}");
+
+                        //Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
+                        WeiXinHelper.CreateLog(u.Account, $"{u.Account}   {r.msgs}", 1);
+                        WeiXinHelper.SendText(u.Account, $"{u.Account}   {r.msgs} ，暂停5分钟再刷，请等待！");
+                        u.IsComplete = false;
+
+                        System.Threading.Thread.Sleep(1000 * 60 * 5);
+                    }
                     else if (r.msgs.Contains("已上限"))
                     {
                         //Main.a1.Invoke($"{u.Account}   {r.msgs}");
