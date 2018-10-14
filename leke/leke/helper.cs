@@ -20,17 +20,20 @@ namespace leke
             WeiXinHelper.SendText(u.Account, $"{u.Account} 已经登录成功，开始刷任务请等待。。。");
             while (true)
             {
-                if (!Main.isRun)
-                {
-                    Log(ConsoleColor.White, $"{u.Account} 已停止！");
-                    WeiXinHelper.SendText(u.Account, $"{u.Account} 已停止刷任务。");
-                    break;
-                }
+                
+                
                 
                 var r = new Msg();
                 try
                 {
                     r = Getdingdan(u.Account, cookie);
+                    if (u.cancelToken.IsCancellationRequested)
+                    {
+                        //Log(ConsoleColor.White, $"{u.Account} 已停止！");
+                       
+                        WeiXinHelper.CreateLog(u.Account, $"{u.Account}  已停止刷任务！", 1);
+                        break;
+                    }
                     if (r.code == "1")
                     {
                         //u.IsComplete = true;
@@ -50,7 +53,7 @@ namespace leke
                             Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
                         }
                         u.IsComplete = true;
-                        System.Threading.Thread.Sleep(1000 * 60*5);
+                        System.Threading.Thread.Sleep(1000 *60);
                     }
                     else if (r.msgs.Contains("关闭任务"))
                     {
@@ -108,6 +111,7 @@ namespace leke
 
         public static void Login(User u)
         {
+            
             string account = u.Account;
             string pass = u.Pass;
             try
@@ -191,7 +195,7 @@ namespace leke
                 {
 
                     Log(ConsoleColor.Red, $"{account} 登录失败，等待重新登录。。。，error: {jArray.msgs} ");
-                    System.Threading.Thread.Sleep(3000);
+                    System.Threading.Thread.Sleep(5000);
                     Log(ConsoleColor.Yellow, $"{account} 开始重新登录。。。");
                     Login(u);
                 }
@@ -201,7 +205,7 @@ namespace leke
             {
                 Log(ConsoleColor.Red, $"{account} 登录失败，等待重新登录。。。，error: {er.Message} ");
                 WeiXinHelper.CreateLog(account, $"{account} 登录失败，等待重新登录。。。，error: {er.Message} ", 2);
-                System.Threading.Thread.Sleep(3000);
+                System.Threading.Thread.Sleep(5000);
                 Log(ConsoleColor.Yellow, $"{account} 开始重新登录。。。");
                 WeiXinHelper.CreateLog(account, $"{account} 开始重新登录。。。", 2);
                 Login(u);
@@ -212,7 +216,7 @@ namespace leke
             {
                 Log(ConsoleColor.Red, $"{u.Account} 出错，error: {e.Message} ");
                 WeiXinHelper.CreateLog(u.Account, $"{u.Account} 返回出错，error: {e.Message} ", 2);
-                System.Threading.Thread.Sleep(3000);
+                System.Threading.Thread.Sleep(5000);
             }
         }
 

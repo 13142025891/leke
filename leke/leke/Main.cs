@@ -9,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -81,7 +82,7 @@ namespace leke
             {
                 Console.Clear();
                 dic.Clear();
-                isRun = true;
+               
                 if (int.TryParse(textBox2.Text, out int interval))
                 {
                     Interval = interval;
@@ -97,7 +98,7 @@ namespace leke
                         flag = false;
                         break;
                     }
-                    dic.TryAdd(list[0], new User { Account = list[0], Pass = list[1] });
+                    dic.TryAdd(list[0], new User { Account = list[0], Pass = list[1] ,cancelToken=new CancellationTokenSource()});
                 }
                 if (flag && dic.Keys.Count > 0)
                 {
@@ -108,39 +109,61 @@ namespace leke
                     {
                         if (dic.TryGetValue(d, out User u))
                         {
+                           
                             Task.Run(() =>
                             {
                                 try
                                 {
-                                    helper.Login(u);
+                                    while (true)
+                                    {
+                                        if (u.cancelToken.IsCancellationRequested)
+                                        {
+                                            break;
+                                        }
+                                        helper.Login(u);
+                                    }
+                                    
                                 }
                                 catch (Exception ex)
                                 {
                                     WeiXinHelper.CreateLog(u.Account, "★★★★★" + ex, 2);
                                     helper.Log(ConsoleColor.Red, "★★★★★" + ex);
                                 }
+                                return 1;
                             });
-                            //System.Threading.Thread.Sleep(3000);
+                            
                         }
 
                     }
+                    isRun = true;
                 }
                 else
                 {
                     helper.Log(ConsoleColor.Red, "没有数据！");
                 }
-
+                
             }
 
 
         }
+        public void Srart(User u)
+        {
 
+        }
         private void button2_Click(object sender, EventArgs e)
         {
             if (isRun)
             {
+                foreach (var d in dic.Keys)
+                {
+                    if (dic.TryGetValue(d, out User u))
+                    {
+                        u.cancelToken.Cancel();
+                        WeiXinHelper.SendText(u.Account, $"{u.Account} 已停止刷任务。");
+                    }
+                }
                 isRun = false;
-                helper.Log(ConsoleColor.Yellow, $"开始停止程序，请等待。。。");
+                helper.Log(ConsoleColor.Yellow, $"程序程序!");
                 this.button1.Enabled = true;
                 this.button2.Enabled = false;
             }
