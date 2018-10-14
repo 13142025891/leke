@@ -53,7 +53,7 @@ namespace leke
                             Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
                         }
                         u.IsComplete = true;
-                        System.Threading.Thread.Sleep(1000 *60);
+                        System.Threading.Thread.Sleep(1000 *60*5);
                     }
                     else if (r.msgs.Contains("关闭任务"))
                     {
@@ -75,7 +75,7 @@ namespace leke
                         WeiXinHelper.SendText(u.Account, $"{u.Account}   {r.msgs}！加油！");
                          u.IsComplete = false;
                         
-                        System.Threading.Thread.Sleep(1000 * 60*60*3);
+                        System.Threading.Thread.Sleep(1000 * 60*60*6);
                     }
                     else
                     {
