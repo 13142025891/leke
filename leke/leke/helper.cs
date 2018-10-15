@@ -38,9 +38,9 @@ namespace leke
                     {
                         Log(ConsoleColor.Green, $"{u.Account}   {r.msgs}");
                         WeiXinHelper.CreateLog(u.Account, $"{u.Account}   {r.msgs}", 2);
-                        WeiXinHelper.SendText(u.Account, $"{u.Account} 需要验证，请打开网址录完成验证！\n{r.msgs}");
+                        WeiXinHelper.SendText(u.Account, $"{u.Account} 需要验证，暂停10分钟！");
 
-                        System.Threading.Thread.Sleep(1000 * 60 * 1);
+                        System.Threading.Thread.Sleep(1000 * 60 * 10);
                     }
                     else if (r.code == "1")
                     {
