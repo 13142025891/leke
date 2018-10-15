@@ -34,7 +34,15 @@ namespace leke
                         WeiXinHelper.CreateLog(u.Account, $"{u.Account}  已停止刷任务！", 1);
                         break;
                     }
-                    if (r.code == "1")
+                    if (r.code == "-1")
+                    {
+                        Log(ConsoleColor.Green, $"{u.Account}   {r.msgs}");
+                        WeiXinHelper.CreateLog(u.Account, $"{u.Account}   {r.msgs}", 2);
+                        WeiXinHelper.SendText(u.Account, $"{u.Account} 需要验证，请打开网址录完成验证！\n{r.msgs}");
+
+                        System.Threading.Thread.Sleep(1000 * 60 * 1);
+                    }
+                    else if (r.code == "1")
                     {
                         //u.IsComplete = true;
                         //Main.a1.Invoke($"{u.Account}   {r.msgs}");
@@ -262,8 +270,20 @@ namespace leke
             HttpWebResponse response = request.GetResponse() as HttpWebResponse;
             System.IO.Stream responseStream = response.GetResponseStream();
             System.IO.StreamReader reader = new System.IO.StreamReader(responseStream, Encoding.GetEncoding("gb2312"));
+
+
             var srcString = reader.ReadToEnd();
+
+
             var jArray = JsonConvert.DeserializeObject<Msg>(srcString);
+            if (jArray.code == null)
+             {
+                if (srcString.Contains("gt3?continue"))
+                {
+                    jArray.code = "-1";
+                    jArray.msgs = srcString;
+                }
+            }
             return jArray;
         }
     }
