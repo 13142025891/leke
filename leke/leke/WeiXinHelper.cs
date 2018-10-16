@@ -99,9 +99,9 @@ namespace leke
         /// <param name="paramData">提交的数据json</param>
         /// <param name="dataEncode">编码方式</param>
         /// <returns></returns>
-        public static void SendText(string empCode, string message)
+        public static void SendText(string empCode, string message,bool isAdmin)
         {
-            if (empCode != "13142025891")
+            if (isAdmin)
             {
                 empCode = empCode + "|13142025891";
             }

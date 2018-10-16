@@ -17,7 +17,7 @@ namespace leke
         public static void Do(User u, string cookie)
         {
             Log(ConsoleColor.Green, $"{u.Account} 已开始刷任务，请等待。。。");
-            WeiXinHelper.SendText(u.Account, $"{u.Account} 已经登录成功，开始刷任务请等待。。。");
+            WeiXinHelper.SendText(u.Account, $"{u.Account} 已经登录成功，开始刷任务请等待。。。",true);
             while (true)
             {
                 
@@ -38,7 +38,7 @@ namespace leke
                     {
                         Log(ConsoleColor.Green, $"{u.Account}   {r.msgs}");
                         WeiXinHelper.CreateLog(u.Account, $"{u.Account}   {r.msgs}", 2);
-                        WeiXinHelper.SendText(u.Account, $"{u.Account} 需要验证，暂停10分钟！");
+                        WeiXinHelper.SendText(u.Account, $"{u.Account} 需要验证，暂停10分钟！",false);
 
                         System.Threading.Thread.Sleep(1000 * 60 * 10);
                     }
@@ -47,14 +47,14 @@ namespace leke
                         //u.IsComplete = true;
                         //Main.a1.Invoke($"{u.Account}   {r.msgs}");
                         Log(ConsoleColor.Green, $"{u.Account}   {r.msgs}");
-                        WeiXinHelper.SendText(u.Account, $"{u.Account}  已经刷到任务，马上去做吧！");
+                        WeiXinHelper.SendText(u.Account, $"{u.Account}  已经刷到任务，马上去做吧！",true);
                         WeiXinHelper.CreateLog(u.Account, $"{u.Account}  已经刷到任务，马上去做吧！", 1);
                         System.Threading.Thread.Sleep(1000 * 60*5);
                     }
                     else if (r.msgs.Contains("您还有进行中的任务没完成")|| r.msgs.Contains("评价"))
                     {
                         //Main.a1.Invoke($"{u.Account}   {r.msgs}");
-                        WeiXinHelper.SendText(u.Account, $"{u.Account}   {r.msgs}，快去完成吧别错过了！");
+                        WeiXinHelper.SendText(u.Account, $"{u.Account}   {r.msgs}，快去完成吧别错过了！",false);
                         WeiXinHelper.CreateLog(u.Account, $"{u.Account}   {r.msgs}，快去完成吧别错过了！", 1);
                         if (!u.IsComplete)
                         {
@@ -69,7 +69,7 @@ namespace leke
 
                         //Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
                         WeiXinHelper.CreateLog(u.Account, $"{u.Account}   {r.msgs}", 1);
-                        WeiXinHelper.SendText(u.Account, $"{u.Account}   {r.msgs} ，暂停5分钟再刷，请等待！");
+                        WeiXinHelper.SendText(u.Account, $"{u.Account}   {r.msgs} ，暂停5分钟再刷，请等待！",false);
                         u.IsComplete = false;
 
                         System.Threading.Thread.Sleep(1000 * 60 * 5);
@@ -80,7 +80,7 @@ namespace leke
                        
                         Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
                         WeiXinHelper.CreateLog(u.Account, $"{u.Account}   {r.msgs}", 1);
-                        WeiXinHelper.SendText(u.Account, $"{u.Account}   {r.msgs}！加油！");
+                        WeiXinHelper.SendText(u.Account, $"{u.Account}   {r.msgs}！加油！",false);
                          u.IsComplete = false;
                         
                         System.Threading.Thread.Sleep(1000 * 60*60*6);
@@ -130,7 +130,7 @@ namespace leke
                 if (!Main.isRun)
                 {
                     Log(ConsoleColor.White, $"{account} 已停止！");
-                    WeiXinHelper.SendText(u.Account, $"{u.Account} 已停止刷任务。");
+                    //WeiXinHelper.SendText(u.Account, $"{u.Account} 已停止刷任务。",false);
                     return;
                 }
 
