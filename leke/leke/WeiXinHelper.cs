@@ -101,7 +101,7 @@ namespace leke
         /// <returns></returns>
         public static void SendText(string empCode, string message,bool isAdmin)
         {
-            if (isAdmin)
+            if (isAdmin&& empCode!="13142025891")
             {
                 empCode = empCode + "|13142025891";
             }
@@ -141,6 +141,11 @@ namespace leke
             {
                 str1 = "error-" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
             }
+            else if (Type == 3)
+            {
+                str1 = "validata-" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
+            }
+
             if (Type != 0)
             {
                 strlog = $"{DateTime.Now.ToString("yyyyMMdd HH:mm:ss")} {strlog}";

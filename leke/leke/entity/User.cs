@@ -13,5 +13,29 @@ namespace leke.entity
         public string Pass { get; set; }
         public bool IsComplete { get; set; }
         public CancellationTokenSource cancelToken { get; set; }
+        public string Name { get; set; }
+        public bool IsMax { get; set; }
+
     }
+    //{"challenge": "5b7adfba154c5a4b75a4daadb37faa04", "success": 1, "new_captcha": true, "gt": "46873be54fcede66ffe12752fe8beb10"}
+
+public class Gt
+{
+    public string challenge { get; set; }
+    public string success { get; set; }
+    public bool new_captcha { get; set; }
+    public string gt { get; set; }
+    }
+
+    public class Validate
+    {
+        public string status { get; set; }
+        public string challenge { get; set; }
+        public string validate { get; set; }
+        
+        public string msg{get; set; }
+    }
+
+  
+
 }

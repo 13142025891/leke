@@ -19,6 +19,9 @@ namespace leke
     {
         public static bool isRun;
         public static int Interval;
+        public static int Begin;
+        public static int End;
+        public static List<int> ListHours;
         public static ConcurrentDictionary<string, User> dic;
         public static MessageBoxShow a1;
         public Main()
@@ -28,7 +31,9 @@ namespace leke
 
         private void Main_Load(object sender, EventArgs e)
         {
-            Interval = 6000;
+            Interval = 10000;
+            Begin = 8;
+            End = 2;
             dic = new ConcurrentDictionary<string, User>();
             a1 = new MessageBoxShow(ShowMessage);
             Task.Run(() =>
@@ -56,6 +61,28 @@ namespace leke
                 sb.AppendLine($"{m.Account},{m.Pass}");
             }
             this.textBox1.Text = sb.ToString();
+          
+
+        }
+        private void initHours()
+        {
+            ListHours = new List<int>();
+            for (var i = Begin; i < 24; i++)
+            {
+                ListHours.Add(i);
+                if (i == End)
+                {
+                    break;
+                }
+
+            }
+            if (Begin > End)
+            {
+                for (var i = 0; i <= End; i++)
+                {
+                    ListHours.Add(i);
+                }
+            }
         }
         public void ShowMessage(string msg)
         {
@@ -87,8 +114,28 @@ namespace leke
                 {
                     Interval = interval;
                 }
+                Interval = Interval < 10000 ? 10000 : Interval;
+                if (int.TryParse(textBox3.Text, out int begin))
+                {
+                    Begin = begin;
+                }
+                if (Begin < 0 || Begin > 23)
+                {
+                    Begin = 8;
+                }
+                if (int.TryParse(textBox4.Text, out int end))
+                {
+                    End = end;
+                }
+                if (End < 0 || End > 23)
+                {
+                    Begin = 2;
+                }
+                initHours();
                 var users = textBox1.Text.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 var flag = true;
+
+                helper.Log(ConsoleColor.Red, $"开始任务，开始时间{Begin}，结束时间 {End}");
                 foreach (var user in users)
                 {
                     var list = user.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -105,36 +152,61 @@ namespace leke
                     helper.Log(ConsoleColor.Yellow, $"开始启动程序，请等待。。。");
                     this.button1.Enabled = false;
                     this.button2.Enabled = true;
-                    foreach (var d in dic.Keys)
+                    Task.Run(() =>
                     {
-                        if (dic.TryGetValue(d, out User u))
+                        try
                         {
-                           
-                            Task.Run(() =>
+                            foreach (var d in dic.Keys)
                             {
-                                try
+                                if (dic.TryGetValue(d, out User u))
                                 {
-                                    while (true)
-                                    {
-                                        if (u.cancelToken.IsCancellationRequested)
-                                        {
-                                            break;
-                                        }
-                                        helper.Login(u);
-                                    }
-                                    
-                                }
-                                catch (Exception ex)
-                                {
-                                    WeiXinHelper.CreateLog(u.Account, "★★★★★" + ex, 2);
-                                    helper.Log(ConsoleColor.Red, "★★★★★" + ex);
-                                }
-                                return 1;
-                            });
-                            
-                        }
 
-                    }
+                                    Task.Run(() =>
+                                    {
+                                        try
+                                        {
+                                            while (true)
+                                            {
+                                                if (u.cancelToken.IsCancellationRequested)
+                                                {
+                                                    break;
+                                                }
+                                                var hours = DateTime.Now.Hour;
+                                                if (!u.IsMax && ListHours.Contains(hours))
+                                                {
+                                                    helper.Login(u);
+                                                }
+                                                if (u.IsMax)
+                                                {
+                                                    System.Threading.Thread.Sleep(1000 * 60 * 60);
+                                                }
+                                            }
+
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            WeiXinHelper.CreateLog(u.Account, "★★★★★" + ex, 2);
+                                            helper.Log(ConsoleColor.Red, "★★★★★" + ex);
+                                        }
+                                        return 1;
+                                    });
+                                    System.Threading.Thread.Sleep(5000);
+                                }
+
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            WeiXinHelper.CreateLog("main", "★★★★★" + ex, 2);
+                            helper.Log(ConsoleColor.Red, "★★★★★" + ex);
+                        }
+                        return 1;
+                    });
+
+
+
+                   
                     isRun = true;
                 }
                 else
