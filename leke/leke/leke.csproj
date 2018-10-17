@@ -58,6 +58,7 @@
     <Compile Include="entity\base.cs" />
     <Compile Include="entity\Msg.cs" />
     <Compile Include="entity\User.cs" />
+    <Compile Include="waphelper.cs" />
     <Compile Include="helper.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>

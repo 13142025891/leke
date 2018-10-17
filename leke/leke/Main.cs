@@ -190,6 +190,35 @@ namespace leke
                                         }
                                         return 1;
                                     });
+                                    Task.Run(() =>
+                                    {
+                                        try
+                                        {
+                                            while (true)
+                                            {
+                                                if (u.cancelToken.IsCancellationRequested)
+                                                {
+                                                    break;
+                                                }
+                                                var hours = DateTime.Now.Hour;
+                                                if (!u.IsMax && ListHours.Contains(hours))
+                                                {
+                                                    waphelper.Login(u);
+                                                }
+                                                if (u.IsMax)
+                                                {
+                                                    System.Threading.Thread.Sleep(1000 * 60 * 60);
+                                                }
+                                            }
+
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            WeiXinHelper.CreateLog(u.Account, "★★★★★" + ex, 2);
+                                            helper.Log(ConsoleColor.Red, "★★★★★" + ex);
+                                        }
+                                        return 1;
+                                    });
                                     System.Threading.Thread.Sleep(5000);
                                 }
 
