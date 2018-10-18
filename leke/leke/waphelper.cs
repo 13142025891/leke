@@ -12,25 +12,26 @@ namespace leke
 {
     public class waphelper
     {
-       
+
         public const string logUrl = "http://w.58leke.com/index.php?s=/Wapusers/login.html";
 
-        
 
-        public const string taskurl= "http://w.58leke.com/index.php?s=/Wapajax/tasksets2.html";
+
+        public const string taskurl = "http://w.58leke.com/index.php?s=/Wapajax/tasksets2.html";
 
         public static void Do(User u, string cookie)
         {
             Log(ConsoleColor.Green, $"{u.Account} 已开始刷任务，请等待。。。");
-            WeiXinHelper.SendText("13142025891", $"wap {u.Account} 已经登录成功，开始刷任务请等待。。。",false);
+            WeiXinHelper.SendText("13142025891", $"wap {u.Account} 已经登录成功，开始刷任务请等待。。。", false);
             while (true)
             {
                 var hours = DateTime.Now.Hour;
                 if (!Main.ListHours.Contains(hours))
                 {
                     Log(ConsoleColor.Yellow, $"{u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！");
-                    WeiXinHelper.CreateLog("wap"+u.Account, $"{u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！", 1);
-                    WeiXinHelper.SendText(string.IsNullOrEmpty(u.Name) ? u.Account : u.Name, $"手机端 {u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！", false);
+                    WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！", 1);
+                    WeiXinHelper.SendText(string.IsNullOrEmpty(u.WeiXinId) ? u.Account : u.WeiXinId, $"手机端 {u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！", false);
+                    return;
                 }
 
                 var r = new Msg();
@@ -41,8 +42,8 @@ namespace leke
                     if (u.cancelToken.IsCancellationRequested)
                     {
                         //Log(ConsoleColor.White, $"{u.Account} 已停止！");
-                       
-                        WeiXinHelper.CreateLog("wap"+u.Account, $"{u.Account}  已停止刷任务！", 1);
+
+                        WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}  已停止刷任务！", 1);
                         break;
                     }
                     if (r.code == "-1")
@@ -61,14 +62,14 @@ namespace leke
                         //u.IsComplete = true;
                         //Main.a1.Invoke($"{u.Account}   {r.msgs}");
                         Log(ConsoleColor.Green, $"{u.Account}   {r.msgs}");
-                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.Name) ? u.Account : u.Name, $"手机端 {u.Account}  已经刷到任务，马上去做吧！", true);
+                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.WeiXinId) ? u.Account : u.WeiXinId, $"手机端 {u.Account}  已经刷到任务，马上去做吧！", true);
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}  已经刷到任务，马上去做吧！", 1);
                         System.Threading.Thread.Sleep(1000 * 60 * 5);
                     }
                     else if (r.msgs.Contains("您还有进行中的任务没完成") || r.msgs.Contains("评价") || r.msgs.Contains("工单未处理"))
                     {
 
-                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.Name) ? u.Account : u.Name, $"手机端 {u.Account}   {r.msgs}，快去完成吧！", false);
+                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.WeiXinId) ? u.Account : u.WeiXinId, $"手机端 {u.Account}   {r.msgs}，快去完成吧！", false);
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}   {r.msgs}，快去完成吧！", 1);
                         if (!u.IsComplete)
                         {
@@ -83,7 +84,7 @@ namespace leke
 
                         //Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}   {r.msgs}", 1);
-                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.Name) ? u.Account : u.Name, $"手机端 {u.Account}   {r.msgs} ，暂停5分钟再刷，请等待！", false);
+                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.WeiXinId) ? u.Account : u.WeiXinId, $"手机端 {u.Account}   {r.msgs} ，暂停5分钟再刷，请等待！", false);
                         u.IsComplete = false;
 
                         System.Threading.Thread.Sleep(1000 * 60 * 5);
@@ -94,7 +95,7 @@ namespace leke
 
                         Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}，明天{Main.Begin}点开始刷！！");
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}   {r.msgs} ，明天{Main.Begin}点开始刷！！", 1);
-                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.Name) ? u.Account : u.Name, $" 手机端 {u.Account}   {r.msgs}，！明天{Main.Begin}点开始刷！！", true);
+                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.WeiXinId) ? u.Account : u.WeiXinId, $" 手机端 {u.Account}   {r.msgs}，！明天{Main.Begin}点开始刷！！", true);
                         u.IsComplete = false;
                         u.IsMax = true;
                         return;
@@ -112,14 +113,14 @@ namespace leke
                 catch (WebException er)
                 {
                     Log(ConsoleColor.Red, $"{u.Account} 刷任务出错，error: {er.Message} ");
-                    WeiXinHelper.CreateLog("wap"+u.Account, $"{u.Account} 刷任务出错，error: {er.Message} ", 2);
-                    System.Threading.Thread.Sleep(1000 * 5);
+                    WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account} 刷任务出错，error: {er.Message} ", 2);
+                    System.Threading.Thread.Sleep(1000 * 15);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log(ConsoleColor.Red, $"{u.Account} 返回出错，error: {e.Message} ");
-                    WeiXinHelper.CreateLog("wap"+u.Account, $"{u.Account} 返回出错，error: {e.Message} ", 2);
-                    System.Threading.Thread.Sleep(5000);
+                    WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account} 返回出错，error: {e.Message} ", 2);
+                    System.Threading.Thread.Sleep(1000 * 155);
                 }
 
 
@@ -135,7 +136,7 @@ namespace leke
 
         public static void Login(User u)
         {
-            
+
             string account = u.Account;
             string pass = u.Pass;
             try
@@ -228,20 +229,20 @@ namespace leke
             catch (WebException er)
             {
                 Log(ConsoleColor.Red, $"{account} 登录失败，等待重新登录。。。，error: {er.Message} ");
-                WeiXinHelper.CreateLog("wap"+account, $"{account} 登录失败，等待重新登录。。。，error: {er.Message} ", 2);
+                WeiXinHelper.CreateLog("wap" + account, $"{account} 登录失败，等待重新登录。。。，error: {er.Message} ", 2);
                 System.Threading.Thread.Sleep(5000);
                 Log(ConsoleColor.Yellow, $"{account} 开始重新登录。。。");
-                WeiXinHelper.CreateLog("wap"+account, $"{account} 开始重新登录。。。", 2);
+                WeiXinHelper.CreateLog("wap" + account, $"{account} 开始重新登录。。。", 2);
                 //Login(u);
-                
+
 
             }
             catch (Exception e)
             {
                 Log(ConsoleColor.Red, $"{u.Account} 出错，error: {e.Message} ");
-                WeiXinHelper.CreateLog("wap"+u.Account, $"{u.Account} 返回出错，error: {e.Message} ", 2);
+                WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account} 返回出错，error: {e.Message} ", 2);
                 System.Threading.Thread.Sleep(5000);
-                
+
             }
         }
 
@@ -250,12 +251,12 @@ namespace leke
 
         private static Msg Getdingdan(string account, string cookie)
         {
-            
+
             Dictionary<string, string> postParams = new Dictionary<string, string>();
             postParams.Add("task_type", "3");
-          
+
             postParams.Add("maxmoney", "2000");
-           
+
 
             //task_type=1&app=1&pc=2&maxmoney=2000&hasCaptcha=0&captcha_code=&
             // 要提交的字符串数据。格式形如:user=uesr1&password=123 task_type=1&app=1&pc=2&maxmoney=2000&hasCaptcha=0&captcha_code=
@@ -285,7 +286,7 @@ namespace leke
             request.Referer = "http://w.58leke.com/index.php?s=/Wapindex/index.html";
             request.Headers.Add("Cookie", cookie.Replace("path=/,", ""));
 
-            
+
 
             //Accept-Encoding: gzip, deflate
             //Accept-Language: zh-CN,zh;q=0.9,en;q=0.8
@@ -301,21 +302,21 @@ namespace leke
             System.IO.Stream responseStream = response.GetResponseStream();
             System.IO.StreamReader reader = new System.IO.StreamReader(responseStream, Encoding.GetEncoding("gb2312"));
 
-            var  cookies = response.Headers.Get("Set-Cookie");
+            var cookies = response.Headers.Get("Set-Cookie");
             var srcString = reader.ReadToEnd();
 
 
             var jArray = JsonConvert.DeserializeObject<Msg>(srcString);
             if (jArray.code == null)
-             {
+            {
                 if (srcString.Contains("gt3?continue"))
                 {
-                   
-                    Log(ConsoleColor.Yellow, $"{account}  需要输入验证码，开始验证！");
-                    WeiXinHelper.CreateLog("wap"+account, $"{account}  需要输入验证码，开始验证！", 3);
-                    
 
-                    jArray= Validate(cookies,jArray.return_url,account);
+                    Log(ConsoleColor.Yellow, $"{account}  需要输入验证码，开始验证！");
+                    WeiXinHelper.CreateLog("wap" + account, $"{account}  需要输入验证码，开始验证！", 3);
+
+
+                    jArray = Validate(cookies, jArray.return_url, account);
 
                 }
             }
@@ -323,20 +324,20 @@ namespace leke
         }
 
 
-        private static Msg Validate(string cookie,string url,string account)
+        private static Msg Validate(string cookie, string url, string account)
         {
             var sb = new StringBuilder();
             sb.AppendLine($"手机端 {account}  需要输入验证码！开始验证！");
-           
+
 
             // TimeSpan cha = (DateTime.Now - TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1)));
-           
+
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
             request.Method = "GET";
             request.KeepAlive = false;
             request.AllowAutoRedirect = false;
             request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36";
-            
+
 
             // 接收返回的页面
             HttpWebResponse response = request.GetResponse() as HttpWebResponse;
@@ -345,33 +346,33 @@ namespace leke
             System.IO.StreamReader reader = new System.IO.StreamReader(responseStream, Encoding.UTF8);
             string srcString = reader.ReadToEnd();
             //var jArray = JsonConvert.DeserializeObject<Gt>(srcString);
-         
+
 
             /////////////////////////////////////////////////
             //1.打开 MyLogin.aspx 页面，获得 GetVeiwState &EventValidation
             /////////////////////////////////////////////////                
             //设置打开页面的参数
             TimeSpan cha = (DateTime.Now - TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1)));
-            
-             request = WebRequest.Create("http://s.58leke.com/gt3/pc-geetest/register?t="+ cha.TotalSeconds) as HttpWebRequest;
+
+            request = WebRequest.Create("http://s.58leke.com/gt3/pc-geetest/register?t=" + cha.TotalSeconds) as HttpWebRequest;
             request.Method = "GET";
             request.KeepAlive = false;
             request.AllowAutoRedirect = false;
             request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36";
             request.Headers.Add("Cookie", cookies);
-           // cookies = response.Headers.Get("Set-Cookie");
+            // cookies = response.Headers.Get("Set-Cookie");
             // 接收返回的页面
             response = request.GetResponse() as HttpWebResponse;
             var cookies1 = response.Headers.Get("Set-Cookie");
             responseStream = response.GetResponseStream();
 
             reader = new System.IO.StreamReader(responseStream, Encoding.UTF8);
-             srcString = reader.ReadToEnd();
-            var  jArray = JsonConvert.DeserializeObject<Gt>(srcString);
+            srcString = reader.ReadToEnd();
+            var jArray = JsonConvert.DeserializeObject<Gt>(srcString);
 
             Log(ConsoleColor.Yellow, $"{account}  调用乐客验证码数据成功！{srcString}");
-            WeiXinHelper.CreateLog("wap"+account, $"{account}  调用乐客验证码数据成功！{srcString}", 3);
-             sb.AppendLine($"{account}  调用乐客验证码数据成功！{srcString}");
+            WeiXinHelper.CreateLog("wap" + account, $"{account}  调用乐客验证码数据成功！{srcString}", 3);
+            sb.AppendLine($"{account}  调用乐客验证码数据成功！{srcString}");
             HttpWebRequest request1 = WebRequest.Create($"http://jiyanapi.c2567.com/shibie?gt={jArray.gt}&challenge={jArray.challenge}&referer=http://s.58leke.com&user=13142025891&pass=anye520fei&return=json&model=3&format=utf8") as HttpWebRequest;
             request1.Method = "GET";
             request1.KeepAlive = false;
@@ -381,29 +382,29 @@ namespace leke
             cookies = response.Headers.Get("Set-Cookie");
             response = request1.GetResponse() as HttpWebResponse;
             responseStream = response.GetResponseStream();
-             reader = new System.IO.StreamReader(responseStream, Encoding.UTF8);
-             srcString = reader.ReadToEnd();
-             var vali = JsonConvert.DeserializeObject<Validate>(srcString);
+            reader = new System.IO.StreamReader(responseStream, Encoding.UTF8);
+            srcString = reader.ReadToEnd();
+            var vali = JsonConvert.DeserializeObject<Validate>(srcString);
 
             Log(ConsoleColor.Yellow, $"{account}  调用验证服务！{srcString}");
-            WeiXinHelper.CreateLog("wap"+account, $"{account}  调用验证服务！{srcString}", 3);
+            WeiXinHelper.CreateLog("wap" + account, $"{account}  调用验证服务！{srcString}", 3);
             sb.AppendLine($"{account}  调用验证服务！{srcString}");
-            return va(vali, cookies,account,sb);
+            return va(vali, cookies, account, sb);
 
 
-           
+
 
         }
 
 
 
-        private static Msg va( Validate v,string cookie,string account,StringBuilder sb)
+        private static Msg va(Validate v, string cookie, string account, StringBuilder sb)
         {
             Dictionary<string, string> postParams = new Dictionary<string, string>();
             postParams.Add("geetest_challenge", v.challenge);
             postParams.Add("geetest_validate", v.validate);
-            postParams.Add("geetest_seccode", v.validate+ "|jordan");
-            
+            postParams.Add("geetest_seccode", v.validate + "|jordan");
+
             // 要提交的字符串数据。格式形如:user=uesr1&password=123 task_type=1&app=1&pc=2&maxmoney=2000&hasCaptcha=0&captcha_code=
             string postString = "";
             foreach (KeyValuePair<string, string> de in postParams)
@@ -420,7 +421,7 @@ namespace leke
             request.Method = "POST";
             request.KeepAlive = false;
             request.ContentType = "application/x-www-form-urlencoded;charset=UTF-8";
-            
+
             request.ContentLength = postData.Length;
             request.AllowAutoRedirect = false;
             request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36";
@@ -440,19 +441,20 @@ namespace leke
             var srcString = reader.ReadToEnd();
 
             Log(ConsoleColor.Yellow, $"{account}  提交验证！{srcString}");
-            WeiXinHelper.CreateLog("wap"+account, $"{account}  提交验证！{srcString}", 3);
+            WeiXinHelper.CreateLog("wap" + account, $"{account}  提交验证！{srcString}", 3);
             sb.AppendLine($"{account}  提交验证！{srcString}");
             WeiXinHelper.SendText("13142025891", sb.ToString(), false);
-           
+
 
             var jArray = JsonConvert.DeserializeObject<Msg>(srcString);
             if (jArray == null || jArray.status != "success")
             {
                 jArray = new Msg { code = "-1", msgs = srcString };
 
-                
+
             }
-            else {
+            else
+            {
                 jArray.code = "8";
                 jArray.msgs = "验证成功！";
             }

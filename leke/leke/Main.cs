@@ -42,7 +42,7 @@ namespace leke
                 {
                     while (true)
                     {
-                        System.Threading.Thread.Sleep(1000*60*10);
+                        System.Threading.Thread.Sleep(1000 * 60 * 10);
                         Console.Clear();
 
                     }
@@ -53,15 +53,19 @@ namespace leke
                     WeiXinHelper.CreateLog("main", "★★★★★" + ex, 2);
                 }
             });
-            var str = File.ReadAllText("Users.json");
+            var str = File.ReadAllText("Users.json", Encoding.Default);
             var lst = JsonConvert.DeserializeObject<List<User>>(str);
             var sb = new StringBuilder();
-            foreach (var m in lst)
+
+            this.dataGridView1.AutoGenerateColumns = false;
+            this.dataGridView1.DataSource = lst;
+            // this.textBox1.Text = sb.ToString();
+            foreach (var user in lst)
             {
-                sb.AppendLine($"{m.Account},{m.Pass}");
+                user.IsRun = true;
+                user.cancelToken = new CancellationTokenSource();
+                dic.TryAdd(user.Account, user);
             }
-            this.textBox1.Text = sb.ToString();
-          
 
         }
         private void initHours()
@@ -93,7 +97,7 @@ namespace leke
 
         void MessageBoxShow_F(string msg)
         {
-            
+
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -103,13 +107,13 @@ namespace leke
                 WeiXinHelper.CreateLog("weixin", $"企业微信获取token出错", 2);
                 return;
             }
-            
+
 
             if (!isRun)
             {
                 Console.Clear();
                 dic.Clear();
-               
+
                 if (int.TryParse(textBox2.Text, out int interval))
                 {
                     Interval = interval;
@@ -132,127 +136,142 @@ namespace leke
                     Begin = 2;
                 }
                 initHours();
-                var users = textBox1.Text.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+
                 var flag = true;
 
                 helper.Log(ConsoleColor.Red, $"开始任务，开始时间{Begin}，结束时间 {End}");
+                var users = this.dataGridView1.DataSource as List<User>;
                 foreach (var user in users)
                 {
-                    var list = user.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                    if (list == null || list.Count != 2)
-                    {
-                        helper.Log(ConsoleColor.Red, $"{user} 格式不正确，请检查！");
-                        flag = false;
-                        break;
-                    }
-                    dic.TryAdd(list[0], new User { Account = list[0], Pass = list[1] ,cancelToken=new CancellationTokenSource()});
+                    user.IsRun = true;
+                    user.cancelToken = new CancellationTokenSource();
+                    dic.TryAdd(user.Account, user);
                 }
+                this.dataGridView1.DataSource = users;
+                //return;
                 if (flag && dic.Keys.Count > 0)
                 {
                     helper.Log(ConsoleColor.Yellow, $"开始启动程序，请等待。。。");
                     this.button1.Enabled = false;
                     this.button2.Enabled = true;
-                    Task.Run(() =>
-                    {
-                        try
-                        {
-                            foreach (var d in dic.Keys)
-                            {
-                                if (dic.TryGetValue(d, out User u))
-                                {
-
-                                    Task.Run(() =>
-                                    {
-                                        try
-                                        {
-                                            while (true)
-                                            {
-                                                if (u.cancelToken.IsCancellationRequested)
-                                                {
-                                                    break;
-                                                }
-                                                var hours = DateTime.Now.Hour;
-                                                if (!u.IsMax && ListHours.Contains(hours))
-                                                {
-                                                    helper.Login(u);
-                                                }
-                                                if (u.IsMax)
-                                                {
-                                                    System.Threading.Thread.Sleep(1000 * 60 * 60);
-                                                }
-                                                else {
-                                                    System.Threading.Thread.Sleep(1000 * 60 * 5);
-                                                }
-                                            }
-
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            WeiXinHelper.CreateLog(u.Account, "★★★★★" + ex, 2);
-                                            helper.Log(ConsoleColor.Red, "★★★★★" + ex);
-                                        }
-                                        return 1;
-                                    });
-                                    Task.Run(() =>
-                                    {
-                                        try
-                                        {
-                                            while (true)
-                                            {
-                                                if (u.cancelToken.IsCancellationRequested)
-                                                {
-                                                    break;
-                                                }
-                                                var hours = DateTime.Now.Hour;
-                                                if (!u.IsMax && ListHours.Contains(hours))
-                                                {
-                                                    waphelper.Login(u);
-                                                }
-                                                if (u.IsMax)
-                                                {
-                                                    System.Threading.Thread.Sleep(1000 * 60 * 60);
-                                                }
-                                                else
-                                                {
-                                                    System.Threading.Thread.Sleep(1000 * 60 * 5);
-                                                }
-                                            }
-
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            WeiXinHelper.CreateLog(u.Account, "★★★★★" + ex, 2);
-                                            helper.Log(ConsoleColor.Red, "★★★★★" + ex);
-                                        }
-                                        return 1;
-                                    });
-                                    System.Threading.Thread.Sleep(20000);
-                                }
-
-                            }
-
-                        }
-                        catch (Exception ex)
-                        {
-                            WeiXinHelper.CreateLog("main", "★★★★★" + ex, 2);
-                            helper.Log(ConsoleColor.Red, "★★★★★" + ex);
-                        }
-                        return 1;
-                    });
-
-
-
-                   
+                    Start();
                     isRun = true;
                 }
                 else
                 {
                     helper.Log(ConsoleColor.Red, "没有数据！");
                 }
-                
+
             }
 
 
+        }
+        private void Start(string account = null)
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    foreach (var d in dic.Keys)
+                    {
+                        if (dic.TryGetValue(d, out User u))
+                        {
+                            if (!string.IsNullOrEmpty(account) && u.Account != account)
+                            {
+                                continue;
+                            }
+
+                            Task.Run(() =>
+                            {
+                                try
+                                {
+                                    while (true)
+                                    {
+                                        if (u.cancelToken.IsCancellationRequested)
+                                        {
+                                            helper.Log(ConsoleColor.Red, u.Account + " 停止");
+                                            break;
+
+                                        }
+                                        
+                                        var hours = DateTime.Now.Hour;
+                                        if (!u.IsMax && ListHours.Contains(hours)&&u.BeginTime<=hours)
+                                        {
+                                            helper.Login(u);
+                                        }
+                                        if (u.IsMax)
+                                        {
+                                            System.Threading.Thread.Sleep(1000 * 60 * 60);
+                                        }
+                                        else
+                                        {
+                                            System.Threading.Thread.Sleep(1000 * 60 * 5);
+                                        }
+                                        
+                                    }
+
+                                }
+                                catch (Exception ex)
+                                {
+                                    WeiXinHelper.CreateLog(u.Account, "★★★★★" + ex, 2);
+                                    helper.Log(ConsoleColor.Red, "★★★★★" + ex);
+                                }
+                                return 1;
+                            });
+
+                            if (u.Wap)
+                            {
+                                Task.Run(() =>
+                                {
+                                    try
+                                    {
+                                        while (true)
+                                        {
+                                            if (u.cancelToken.IsCancellationRequested)
+                                            {
+                                                helper.Log(ConsoleColor.Red, u.Account + " 停止");
+                                                break;
+                                            }
+
+                                            var hours = DateTime.Now.Hour;
+                                            if (!u.IsMax && ListHours.Contains(hours))
+                                            {
+                                                waphelper.Login(u);
+                                            }
+                                            if (u.IsMax)
+                                            {
+                                                System.Threading.Thread.Sleep(1000 * 60 * 60);
+                                            }
+                                            else
+                                            {
+                                                System.Threading.Thread.Sleep(1000 * 60 * 5);
+                                            }
+                                        }
+
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        WeiXinHelper.CreateLog(u.Account, "★★★★★" + ex, 2);
+                                        helper.Log(ConsoleColor.Red, "★★★★★" + ex);
+                                    }
+                                    return 1;
+                                });
+                            }
+
+                            System.Threading.Thread.Sleep(10000);
+                        }
+
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    WeiXinHelper.CreateLog("main", "★★★★★" + ex, 2);
+                    helper.Log(ConsoleColor.Red, "★★★★★" + ex);
+                }
+                return 1;
+            });
         }
         public void Srart(User u)
         {
@@ -267,7 +286,7 @@ namespace leke
                     if (dic.TryGetValue(d, out User u))
                     {
                         u.cancelToken.Cancel();
-                        WeiXinHelper.SendText(u.Account, $"{u.Account} 已停止刷任务。",true);
+                        WeiXinHelper.SendText(u.Account, $"{u.Account} 已停止刷任务。", true);
                     }
                 }
                 isRun = false;
@@ -277,6 +296,107 @@ namespace leke
             }
 
 
+        }
+
+        private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.RowIndex > -1)
+            {
+                //var acc = this.dataGridView1.Rows[e.RowIndex].Cells["Account"].Value.ToString();
+
+                //if (dic.TryGetValue(acc, out User u))
+                //{
+                //    if (!u.IsRun)
+                //    {
+                //        Button button = sender as Button;
+                //        button.Enabled = false;
+                //    }
+
+                //}
+
+
+
+            }
+
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex > -1)
+            {
+                var acc = this.dataGridView1.Rows[e.RowIndex].Cells["Account"].Value.ToString();
+
+                if (dic.TryGetValue(acc, out User u))
+                {
+
+                    if (dataGridView1.Columns[e.ColumnIndex].Name == "operation")
+                    {
+                        DataGridViewButtonCell vCell = (DataGridViewButtonCell)dataGridView1.CurrentCell;
+                        //dataGridView1.Columns[e.ColumnIndex].ValueType.
+
+                        if (vCell.FormattedValue.ToString() == "停止")
+                        {
+                            vCell.Value = "开始";
+                            u.cancelToken.Cancel();
+                            u.IsRun = false;
+                        }
+                        else
+                        {
+                            if (dic.TryRemove(acc, out User uu))
+                            {
+                                vCell.Value = "停止";
+                                //u.cancelToken = new CancellationTokenSource();
+                                
+                                var newu = new User
+                                {
+                                    Account = u.Account,
+                                    BeginTime = u.BeginTime,
+                                    IsRun = true,
+                                    Pass = u.Pass,
+                                    UserName = u.UserName,
+                                    Wap = u.Wap,
+                                    WeiXinId = u.WeiXinId,
+                                    cancelToken = new CancellationTokenSource(),
+                                    IsComplete = u.IsComplete,
+                                    IsMax = u.IsMax
+
+                                };
+                                var users = this.dataGridView1.DataSource as List<User>;
+                                users.Remove(uu);
+                                users.Add(newu);
+                                dic.TryAdd(newu.Account, newu);
+                                Start(u.Account);
+                                this.dataGridView1.DataSource = users;
+                            }
+                              
+                        }
+
+                    }
+                    else
+                    {
+                        DataGridViewTextBoxCell vCell = (DataGridViewTextBoxCell)this.dataGridView1.Rows[e.RowIndex].Cells[3];
+
+                        var BeginTime = this.dataGridView1.Rows[e.RowIndex].Cells["BeginTime"].Value;
+                        var flag = int.TryParse(BeginTime.ToString(), out int be);
+                        vCell.Value = be > 23 ? 0 : be;
+                        if (!flag)
+                        {
+                            MessageBox.Show("请输入0-23的数字！");
+                        }
+
+
+
+                    }
+                }
+
+
+
+            }
+        }
+
+        private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            e.Cancel = false;
         }
     }
 }

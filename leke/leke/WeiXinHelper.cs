@@ -103,7 +103,7 @@ namespace leke
         {
             if (isAdmin&& empCode!="13142025891")
             {
-                empCode = empCode + "|13142025891";
+                empCode = empCode + "|13142025891|15005854060";
             }
             string accessToken = "";
             string postUrl = "";

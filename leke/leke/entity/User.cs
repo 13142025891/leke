@@ -13,9 +13,14 @@ namespace leke.entity
         public string Pass { get; set; }
         public bool IsComplete { get; set; }
         public CancellationTokenSource cancelToken { get; set; }
-        public string Name { get; set; }
+        public string UserName { get; set; }
         public bool IsMax { get; set; }
 
+        public string WeiXinId { get; set; }
+
+        public bool Wap { get; set; }
+        public int BeginTime { get; set; }
+        public bool IsRun { get; set; }
     }
     //{"challenge": "5b7adfba154c5a4b75a4daadb37faa04", "success": 1, "new_captcha": true, "gt": "46873be54fcede66ffe12752fe8beb10"}
 
