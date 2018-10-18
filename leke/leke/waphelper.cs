@@ -22,7 +22,7 @@ namespace leke
         public static void Do(User u, string cookie)
         {
             Log(ConsoleColor.Green, $"{u.Account} 已开始刷任务，请等待。。。");
-            WeiXinHelper.SendText("13142025891", $"{u.Account} 已经登录成功，开始刷任务请等待。。。",false);
+            WeiXinHelper.SendText("13142025891", $"wap {u.Account} 已经登录成功，开始刷任务请等待。。。",false);
             while (true)
             {
                 var hours = DateTime.Now.Hour;
@@ -30,7 +30,7 @@ namespace leke
                 {
                     Log(ConsoleColor.Yellow, $"{u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！");
                     WeiXinHelper.CreateLog("wap"+u.Account, $"{u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！", 1);
-                    WeiXinHelper.SendText(string.IsNullOrEmpty(u.Name) ? u.Account : u.Name, $"{u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！", false);
+                    WeiXinHelper.SendText(string.IsNullOrEmpty(u.Name) ? u.Account : u.Name, $"手机端 {u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！", false);
                 }
 
                 var r = new Msg();
@@ -61,14 +61,14 @@ namespace leke
                         //u.IsComplete = true;
                         //Main.a1.Invoke($"{u.Account}   {r.msgs}");
                         Log(ConsoleColor.Green, $"{u.Account}   {r.msgs}");
-                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.Name) ? u.Account : u.Name, $"{u.Account}  已经刷到任务，马上去做吧！", true);
+                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.Name) ? u.Account : u.Name, $"手机端 {u.Account}  已经刷到任务，马上去做吧！", true);
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}  已经刷到任务，马上去做吧！", 1);
                         System.Threading.Thread.Sleep(1000 * 60 * 5);
                     }
                     else if (r.msgs.Contains("您还有进行中的任务没完成") || r.msgs.Contains("评价") || r.msgs.Contains("工单未处理"))
                     {
 
-                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.Name) ? u.Account : u.Name, $"{u.Account}   {r.msgs}，快去完成吧！", false);
+                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.Name) ? u.Account : u.Name, $"手机端 {u.Account}   {r.msgs}，快去完成吧！", false);
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}   {r.msgs}，快去完成吧！", 1);
                         if (!u.IsComplete)
                         {
@@ -83,7 +83,7 @@ namespace leke
 
                         //Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}   {r.msgs}", 1);
-                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.Name) ? u.Account : u.Name, $"{u.Account}   {r.msgs} ，暂停5分钟再刷，请等待！", false);
+                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.Name) ? u.Account : u.Name, $"手机端 {u.Account}   {r.msgs} ，暂停5分钟再刷，请等待！", false);
                         u.IsComplete = false;
 
                         System.Threading.Thread.Sleep(1000 * 60 * 5);
@@ -94,7 +94,7 @@ namespace leke
 
                         Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}，明天{Main.Begin}点开始刷！！");
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}   {r.msgs} ，明天{Main.Begin}点开始刷！！", 1);
-                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.Name) ? u.Account : u.Name, $"{u.Account}   {r.msgs}，！明天{Main.Begin}点开始刷！！", true);
+                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.Name) ? u.Account : u.Name, $" 手机端 {u.Account}   {r.msgs}，！明天{Main.Begin}点开始刷！！", true);
                         u.IsComplete = false;
                         u.IsMax = true;
                         return;
@@ -326,7 +326,7 @@ namespace leke
         private static Msg Validate(string cookie,string url,string account)
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"{account}  需要输入验证码！开始验证！");
+            sb.AppendLine($"手机端 {account}  需要输入验证码！开始验证！");
            
 
             // TimeSpan cha = (DateTime.Now - TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1)));

@@ -180,6 +180,9 @@ namespace leke
                                                 {
                                                     System.Threading.Thread.Sleep(1000 * 60 * 60);
                                                 }
+                                                else {
+                                                    System.Threading.Thread.Sleep(1000 * 60 * 5);
+                                                }
                                             }
 
                                         }
@@ -209,6 +212,10 @@ namespace leke
                                                 {
                                                     System.Threading.Thread.Sleep(1000 * 60 * 60);
                                                 }
+                                                else
+                                                {
+                                                    System.Threading.Thread.Sleep(1000 * 60 * 5);
+                                                }
                                             }
 
                                         }
@@ -219,7 +226,7 @@ namespace leke
                                         }
                                         return 1;
                                     });
-                                    System.Threading.Thread.Sleep(5000);
+                                    System.Threading.Thread.Sleep(20000);
                                 }
 
                             }

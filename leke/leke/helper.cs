@@ -109,13 +109,13 @@ namespace leke
                 {
                     Log(ConsoleColor.Red, $"{u.Account} 刷任务出错，error: {er.Message} ");
                     WeiXinHelper.CreateLog(u.Account, $"{u.Account} 刷任务出错，error: {er.Message} ", 2);
-                    System.Threading.Thread.Sleep(1000 * 5);
+                    System.Threading.Thread.Sleep(1000 * 10);
                 }
                 catch(Exception e)
                 {
                     Log(ConsoleColor.Red, $"{u.Account} 返回出错，error: {e.Message} ");
                     WeiXinHelper.CreateLog(u.Account, $"{u.Account} 返回出错，error: {e.Message} ", 2);
-                    System.Threading.Thread.Sleep(5000);
+                    System.Threading.Thread.Sleep(1000*10);
                 }
 
 
@@ -215,7 +215,7 @@ namespace leke
                 {
 
                     Log(ConsoleColor.Red, $"{account} 登录失败，等待重新登录。。。，error: {jArray.msgs} ");
-                    System.Threading.Thread.Sleep(5000);
+                    System.Threading.Thread.Sleep(1000*10);
                     Log(ConsoleColor.Yellow, $"{account} 开始重新登录。。。");
                     //Login(u);
                 }
@@ -225,7 +225,7 @@ namespace leke
             {
                 Log(ConsoleColor.Red, $"{account} 登录失败，等待重新登录。。。，error: {er.Message} ");
                 WeiXinHelper.CreateLog(account, $"{account} 登录失败，等待重新登录。。。，error: {er.Message} ", 2);
-                System.Threading.Thread.Sleep(5000);
+                System.Threading.Thread.Sleep(1000 * 10);
                 Log(ConsoleColor.Yellow, $"{account} 开始重新登录。。。");
                 WeiXinHelper.CreateLog(account, $"{account} 开始重新登录。。。", 2);
                 //Login(u);
@@ -236,7 +236,7 @@ namespace leke
             {
                 Log(ConsoleColor.Red, $"{u.Account} 出错，error: {e.Message} ");
                 WeiXinHelper.CreateLog(u.Account, $"{u.Account} 返回出错，error: {e.Message} ", 2);
-                System.Threading.Thread.Sleep(5000);
+                System.Threading.Thread.Sleep(1000 * 10);
                 
             }
         }

@@ -21,7 +21,7 @@ namespace leke
             {
                 try
                 {
-                    ServiceBase[] serviceToRun = new ServiceBase[] { new WindowsService() };
+                    ServiceBase[] serviceToRun =  new ServiceBase[] { new WindowsService() };
                     ServiceBase.Run(serviceToRun);
                 }
                 catch (Exception ex)
