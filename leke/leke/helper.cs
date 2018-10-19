@@ -36,19 +36,19 @@ namespace leke
                     WeiXinHelper.SendText(string.IsNullOrEmpty(u.WeiXinId) ? u.Account : u.WeiXinId, $"{u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！", false);
                     return;
                 }
+                if (u.cancelToken.IsCancellationRequested)
+                {
+                    //Log(ConsoleColor.White, $"{u.Account} 已停止！");
 
+                    WeiXinHelper.CreateLog(u.Account, $"{u.Account}  已停止刷任务！", 1);
+                    break;
+                }
                 var r = new Msg();
                 try
                 {
                     u.IsMax = false;
                     r = Getdingdan(u.Account, cookie);
-                    if (u.cancelToken.IsCancellationRequested)
-                    {
-                        //Log(ConsoleColor.White, $"{u.Account} 已停止！");
-
-                        WeiXinHelper.CreateLog(u.Account, $"{u.Account}  已停止刷任务！", 1);
-                        break;
-                    }
+                   
                     if (r.code == "-1")
                     {
                         // Log(ConsoleColor.Green, $"{u.Account}   {r.msgs}");

@@ -9,6 +9,23 @@ namespace leke.entity
 {
     public class User
     {
+        public static User Clone(User u)
+        {
+            return   new User
+            {
+                Account = u.Account,
+                BeginTime = u.BeginTime,
+                IsRun = true,
+                Pass = u.Pass,
+                UserName = u.UserName,
+                Wap = u.Wap,
+                WeiXinId = u.WeiXinId,
+                cancelToken = new CancellationTokenSource(),
+                
+                
+
+            };
+        }
         public string Account { get; set; }
         public string Pass { get; set; }
         public bool IsComplete { get; set; }

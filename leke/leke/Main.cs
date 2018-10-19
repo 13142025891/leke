@@ -142,13 +142,14 @@ namespace leke
 
                 helper.Log(ConsoleColor.Red, $"开始任务，开始时间{Begin}，结束时间 {End}");
                 var users = this.dataGridView1.DataSource as List<User>;
+                var newUsers = new List<User>();
                 foreach (var user in users)
                 {
-                    user.IsRun = true;
-                    user.cancelToken = new CancellationTokenSource();
-                    dic.TryAdd(user.Account, user);
+                    var u = User.Clone(user);
+                    newUsers.Add(u);
+                    dic.TryAdd(u.Account, u);
                 }
-                this.dataGridView1.DataSource = users;
+                this.dataGridView1.DataSource = newUsers;
                 //return;
                 if (flag && dic.Keys.Count > 0)
                 {
