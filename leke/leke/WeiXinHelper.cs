@@ -17,6 +17,10 @@ namespace leke
         static string corpid = System.Configuration.ConfigurationManager.AppSettings["corpid"].ToString();
         static string corpsecret = System.Configuration.ConfigurationManager.AppSettings["secret"].ToString();
         static string messageSendURI = System.Configuration.ConfigurationManager.AppSettings["messageSendURI"].ToString();
+        static string getUsers = System.Configuration.ConfigurationManager.AppSettings["getUsers"].ToString();
+        static string userGroup = System.Configuration.ConfigurationManager.AppSettings["userGroup"].ToString();
+
+        
 
         /// <summary>
         /// 获取企业号的accessToken
@@ -84,10 +88,23 @@ namespace leke
                 response.Close();
                 newStream.Close();
             }
+            catch (WebException ex)
+            {
+                WeiXinHelper.CreateLog("main", "★★★★★" + ex, 2);
+                //helper.Log(ConsoleColor.Red, "★★★★★" + ex);
+                WeiXinHelper.SendText("13142025891", "★★★★★" + ex, false);
+                //Login(u);
+
+
+            }
             catch (Exception ex)
             {
+                WeiXinHelper.CreateLog("main", "★★★★★" + ex, 2);
+                //helper.Log(ConsoleColor.Red, "★★★★★" + ex);
+                WeiXinHelper.SendText("13142025891", "★★★★★" + ex, false);
                 return ex.Message;
             }
+            
             return ret;
         }
 
@@ -103,7 +120,7 @@ namespace leke
         {
             if (isAdmin&& empCode!="13142025891")
             {
-                empCode = empCode + "|13142025891|15005854060";
+                empCode = empCode + "|13142025891";//|15005854060
             }
             string accessToken = "";
             string postUrl = "";
@@ -171,6 +188,56 @@ namespace leke
         }
 
 
+        public static List<User> GetUsers()
+        {
+            string url = string.Format(getUsers, CacheHelper.Token.msgs);
+            var list = new List<User>();
+           
+
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                var respText = "";
+                using (Stream resStream = response.GetResponseStream())
+                {
+                    StreamReader reader = new StreamReader(resStream, Encoding.UTF8);
+                    respText = reader.ReadToEnd();
+                    resStream.Close();
+                }
+                var jArray = JsonConvert.DeserializeObject<WeinUserResult>(respText);
+              
+                if (jArray != null&& jArray.userlist!=null&& jArray.userlist.Count > 0)
+                {
+                    jArray.userlist.ForEach(p=> {
+                        if (p.telephone == userGroup)
+                        {
+
+                            list.AddRange(User.Clone(p));
+                        }
+
+                    });
+                }
+
+            }
+            catch (WebException ex)
+            {
+                WeiXinHelper.CreateLog("main", "★★★★★" + ex, 2);
+                //helper.Log(ConsoleColor.Red, "★★★★★" + ex);
+                WeiXinHelper.SendText("13142025891", "★★★★★" + ex, false);
+                //Login(u);
+
+
+            }
+            catch (Exception ex)
+            {
+                WeiXinHelper.CreateLog("main", "★★★★★" + ex, 2);
+                //helper.Log(ConsoleColor.Red, "★★★★★" + ex);
+                WeiXinHelper.SendText("13142025891", "★★★★★" + ex, false);
+            }
+          
+            return list;
+        }
 
     }
 }

@@ -15,9 +15,11 @@ namespace leke
 
         public const string logUrl = "http://w.58leke.com/index.php?s=/Wapusers/login.html";
 
-
+        public const string taskurl1 = "http://w.58leke.com/index.php?s=/Wapajax/taskset.html";
 
         public const string taskurl = "http://w.58leke.com/index.php?s=/Wapajax/tasksets2.html";
+
+        public const string task = "";
 
         public static void Do(User u, string cookie)
         {
@@ -25,23 +27,35 @@ namespace leke
             WeiXinHelper.SendText("13142025891", $"wap {u.Account} 已经登录成功，开始刷任务请等待。。。", false);
             while (true)
             {
+                if (!Main.isRun)
+                {
+                    Log(ConsoleColor.White, $"{u.Account} 程序已停止！");
+                    WeiXinHelper.CreateLog(u.Account, $"{u.Account}  程序已停止！", 1);
+                    return;
+                }
                 var hours = DateTime.Now.Hour;
                 if (!Main.ListHours.Contains(hours))
                 {
                     Log(ConsoleColor.Yellow, $"{u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！");
                     WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！", 1);
-                    WeiXinHelper.SendText(string.IsNullOrEmpty(u.WeiXinId) ? u.Account : u.WeiXinId, $"手机端 {u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！", false);
+                    WeiXinHelper.SendText(u.WeiXinId, $"手机端 {u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！", false);
                     return;
                 }
-
+                if (u.BeginTime > hours)
+                {
+                    Log(ConsoleColor.Yellow, $"{u.Account}  你设定的是 {u.BeginTime}点开始，现在是 {hours}点，任务停止 ！");
+                    WeiXinHelper.CreateLog(u.Account, $"{u.Account}  你设定的是 {u.BeginTime}点开始，现在是 {hours}点，任务停止 ！", 1);
+                    WeiXinHelper.SendText(u.WeiXinId, $"{u.Account}  你设定的是 {u.BeginTime}点开始，现在是 {hours}点，任务停止 ！", false);
+                    return;
+                }
                 var r = new Msg();
                 try
                 {
                     u.IsMax = false;
-                    r = Getdingdan(u.Account, cookie);
+                    r = Getdingdan(u, cookie);
                     if (u.cancelToken.IsCancellationRequested)
                     {
-                        //Log(ConsoleColor.White, $"{u.Account} 已停止！");
+                        Log(ConsoleColor.White, $"{u.Account} 已停止！");
 
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}  已停止刷任务！", 1);
                         break;
@@ -59,32 +73,40 @@ namespace leke
                     }
                     else if (r.code == "1")
                     {
+                        u.HasBiaoqian = false;
                         //u.IsComplete = true;
                         //Main.a1.Invoke($"{u.Account}   {r.msgs}");
                         Log(ConsoleColor.Green, $"{u.Account}   {r.msgs}");
-                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.WeiXinId) ? u.Account : u.WeiXinId, $"手机端 {u.Account}  已经刷到任务，马上去做吧！", true);
+                        WeiXinHelper.SendText(u.WeiXinId, $"手机端 {u.Account}  已经刷到任务，马上去做吧！", true);
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}  已经刷到任务，马上去做吧！", 1);
                         System.Threading.Thread.Sleep(1000 * 60 * 5);
                     }
-                    else if (r.msgs.Contains("您还有进行中的任务没完成") || r.msgs.Contains("评价") || r.msgs.Contains("工单未处理"))
+                     
+                    else if (r.msgs.Contains("任务没完成") || r.msgs.Contains("评价") || r.msgs.Contains("工单未处理"))
                     {
-
-                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.WeiXinId) ? u.Account : u.WeiXinId, $"手机端 {u.Account}   {r.msgs}，快去完成吧！", false);
-                        WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}   {r.msgs}，快去完成吧！", 1);
-                        if (!u.IsComplete)
+                        if (r.msgs.Contains("标签任务没完成"))
                         {
-                            Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
+                            Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs},转普通任务！");
+                            u.HasBiaoqian = true;
                         }
+                        if(r.msgs.Contains("任务没完成"))
+                        {
+                            u.HasBiaoqian = false;
+                        }
+                        
+                        WeiXinHelper.SendText(u.WeiXinId, $"手机端 {u.Account}   {r.msgs}，快去完成吧！", false);
+                        WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}   {r.msgs}，快去完成吧！", 1);
+                        Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
+                        
                         u.IsComplete = true;
-                        System.Threading.Thread.Sleep(1000 * 60 * 5);
+                        System.Threading.Thread.Sleep(1000 * 60  );
                     }
                     else if (r.msgs.Contains("关闭任务"))
                     {
                         //Main.a1.Invoke($"{u.Account}   {r.msgs}");
-
-                        //Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
+                       //Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}   {r.msgs}", 1);
-                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.WeiXinId) ? u.Account : u.WeiXinId, $"手机端 {u.Account}   {r.msgs} ，暂停5分钟再刷，请等待！", false);
+                        WeiXinHelper.SendText(u.WeiXinId, $"手机端 {u.Account}   {r.msgs} ，暂停5分钟再刷，请等待！", false);
                         u.IsComplete = false;
 
                         System.Threading.Thread.Sleep(1000 * 60 * 5);
@@ -95,7 +117,7 @@ namespace leke
 
                         Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}，明天{Main.Begin}点开始刷！！");
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}   {r.msgs} ，明天{Main.Begin}点开始刷！！", 1);
-                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.WeiXinId) ? u.Account : u.WeiXinId, $" 手机端 {u.Account}   {r.msgs}，！明天{Main.Begin}点开始刷！！", true);
+                        WeiXinHelper.SendText(u.WeiXinId, $" 手机端 {u.Account}   {r.msgs}，！明天{Main.Begin}点开始刷！！", true);
                         u.IsComplete = false;
                         u.IsMax = true;
                         return;
@@ -142,14 +164,7 @@ namespace leke
             try
             {
 
-
-
-                if (!Main.isRun)
-                {
-                    Log(ConsoleColor.White, $"{account} 已停止！");
-                    //WeiXinHelper.SendText(u.Account, $"{u.Account} 已停止刷任务。",false);
-                    return;
-                }
+                
 
                 Dictionary<string, string> postParams = new Dictionary<string, string>();
                 postParams.Add("username", account);
@@ -249,11 +264,18 @@ namespace leke
 
 
 
-        private static Msg Getdingdan(string account, string cookie)
+        private static Msg Getdingdan(User u, string cookie)
         {
-
+            var account = u.Account;
             Dictionary<string, string> postParams = new Dictionary<string, string>();
-            postParams.Add("task_type", "3");
+            var task = taskurl;
+            var type = "3";
+            if (u.HasBiaoqian)
+            {
+                task = taskurl1;
+                type = "1";
+            }
+            postParams.Add("task_type", type);
 
             postParams.Add("maxmoney", "2000");
 
@@ -269,9 +291,11 @@ namespace leke
             CookieContainer cookieContainer = new CookieContainer();
             // 将提交的字符串数据转换成字节数组
             byte[] postData = Encoding.ASCII.GetBytes(postString);
+            
+
 
             // 设置提交的相关参数
-            HttpWebRequest request = WebRequest.Create(taskurl) as HttpWebRequest;
+            HttpWebRequest request = WebRequest.Create(task) as HttpWebRequest;
             request.Method = "POST";
             request.KeepAlive = false;
             request.ContentType = "application/x-www-form-urlencoded";

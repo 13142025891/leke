@@ -26,19 +26,31 @@ namespace leke
             while (true)
             {
                 var hours = DateTime.Now.Hour;
-
+                if (!Main.isRun)
+                {
+                    Log(ConsoleColor.White, $"{u.Account} 程序已停止！");
+                    WeiXinHelper.CreateLog(u.Account, $"{u.Account}  程序已停止！", 1);
+                    return;
+                }
                 //var hours = DateTime.Now.Hour;
-                //if (!u.IsMax && ListHours.Contains(hours) && u.BeginTime <= hours)
+                //if (!u.IsMax && ListHours.Contains(hours) )
                 if (!Main.ListHours.Contains(hours))
                 {
                     Log(ConsoleColor.Yellow, $"{u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！");
                     WeiXinHelper.CreateLog(u.Account, $"{u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！", 1);
-                    WeiXinHelper.SendText(string.IsNullOrEmpty(u.WeiXinId) ? u.Account : u.WeiXinId, $"{u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！", false);
+                    WeiXinHelper.SendText(u.WeiXinId, $"{u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！", false);
+                    return;
+                }
+                if (u.BeginTime > hours)
+                {
+                    Log(ConsoleColor.Yellow, $"{u.Account}  你设定的是 {u.BeginTime}点开始，现在是 {hours}点，任务停止 ！");
+                    WeiXinHelper.CreateLog(u.Account, $"{u.Account}  你设定的是 {u.BeginTime}点开始，现在是 {hours}点，任务停止 ！", 1);
+                    WeiXinHelper.SendText(u.WeiXinId, $"{u.Account}  你设定的是 {u.BeginTime}点开始，现在是 {hours}点，任务停止 ！", false);
                     return;
                 }
                 if (u.cancelToken.IsCancellationRequested)
                 {
-                    //Log(ConsoleColor.White, $"{u.Account} 已停止！");
+                    Log(ConsoleColor.White, $"{u.Account} 已停止！");
 
                     WeiXinHelper.CreateLog(u.Account, $"{u.Account}  已停止刷任务！", 1);
                     break;
@@ -61,21 +73,21 @@ namespace leke
                         //u.IsComplete = true;
                         //Main.a1.Invoke($"{u.Account}   {r.msgs}");
                         Log(ConsoleColor.Green, $"{u.Account}   {r.msgs}");
-                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.WeiXinId) ? u.Account : u.WeiXinId, $"{u.Account}  已经刷到任务，马上去做吧！", true);
+                        WeiXinHelper.SendText(u.WeiXinId, $"{u.Account}  已经刷到任务，马上去做吧！", true);
                         WeiXinHelper.CreateLog(u.Account, $"{u.Account}  已经刷到任务，马上去做吧！", 1);
                         System.Threading.Thread.Sleep(1000 * 60 * 5);
                     }
                     else if (r.msgs.Contains("您还有进行中的任务没完成") || r.msgs.Contains("评价") || r.msgs.Contains("工单未处理"))
                     {
 
-                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.WeiXinId) ? u.Account : u.WeiXinId, $"{u.Account}   {r.msgs}，快去完成吧！", false);
+                        WeiXinHelper.SendText(u.WeiXinId, $"{u.Account}   {r.msgs}，快去完成吧！", false);
                         WeiXinHelper.CreateLog(u.Account, $"{u.Account}   {r.msgs}，快去完成吧！", 1);
                         if (!u.IsComplete)
                         {
                             Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
                         }
                         u.IsComplete = true;
-                        System.Threading.Thread.Sleep(1000 * 60 * 5);
+                        System.Threading.Thread.Sleep(1000 * 60 );
                     }
                     else if (r.msgs.Contains("关闭任务"))
                     {
@@ -83,7 +95,7 @@ namespace leke
 
                         //Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
                         WeiXinHelper.CreateLog(u.Account, $"{u.Account}   {r.msgs}", 1);
-                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.WeiXinId) ? u.Account : u.WeiXinId, $"{u.Account}   {r.msgs} ，暂停5分钟再刷，请等待！", false);
+                        WeiXinHelper.SendText(u.WeiXinId, $"{u.Account}   {r.msgs} ，暂停5分钟再刷，请等待！", false);
                         u.IsComplete = false;
 
                         System.Threading.Thread.Sleep(1000 * 60 * 5);
@@ -94,7 +106,7 @@ namespace leke
 
                         Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}，明天{Main.Begin}点开始刷！！");
                         WeiXinHelper.CreateLog(u.Account, $"{u.Account}   {r.msgs} ，明天{Main.Begin}点开始刷！！", 1);
-                        WeiXinHelper.SendText(string.IsNullOrEmpty(u.WeiXinId) ? u.Account : u.WeiXinId, $"{u.Account}   {r.msgs}，！明天{Main.Begin}点开始刷！！", true);
+                        WeiXinHelper.SendText(u.WeiXinId, $"{u.Account}   {r.msgs}，！明天{Main.Begin}点开始刷！！", true);
                         u.IsComplete = false;
                         u.IsMax = true;
                         return;
@@ -143,12 +155,7 @@ namespace leke
 
 
 
-                if (!Main.isRun)
-                {
-                    Log(ConsoleColor.White, $"{account} 已停止！");
-                    //WeiXinHelper.SendText(u.Account, $"{u.Account} 已停止刷任务。",false);
-                    return;
-                }
+               
 
                 Dictionary<string, string> postParams = new Dictionary<string, string>();
                 postParams.Add("username", account);
