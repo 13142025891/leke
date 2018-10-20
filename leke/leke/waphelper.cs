@@ -51,7 +51,7 @@ namespace leke
                 var r = new Msg();
                 try
                 {
-                    u.IsMax = false;
+                    u.IsWapMax = false;
                     r = Getdingdan(u, cookie);
                     if (u.cancelToken.IsCancellationRequested)
                     {
@@ -86,11 +86,12 @@ namespace leke
                     {
                         if (r.msgs.Contains("标签任务没完成"))
                         {
-                            Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs},转普通任务！");
+                            Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}, 转刷普通任务！");
                             u.HasBiaoqian = true;
                         }
-                        if(r.msgs.Contains("任务没完成"))
+                        if(r.msgs.Contains("进行中的任务没完成"))
                         {
+                            Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}, 转刷标签任务！");
                             u.HasBiaoqian = false;
                         }
                         
@@ -99,7 +100,7 @@ namespace leke
                         Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
                         
                         u.IsComplete = true;
-                        System.Threading.Thread.Sleep(1000 * 60  );
+                        System.Threading.Thread.Sleep(1000 * 60  *5);
                     }
                     else if (r.msgs.Contains("关闭任务"))
                     {
@@ -119,7 +120,7 @@ namespace leke
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}   {r.msgs} ，明天{Main.Begin}点开始刷！！", 1);
                         WeiXinHelper.SendText(u.WeiXinId, $" 手机端 {u.Account}   {r.msgs}，！明天{Main.Begin}点开始刷！！", true);
                         u.IsComplete = false;
-                        u.IsMax = true;
+                        u.IsWapMax = true;
                         return;
 
                         //System.Threading.Thread.Sleep(1000 * 60*60*6);
@@ -129,20 +130,20 @@ namespace leke
                         //Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}   {r.msgs}", 1);
                         u.IsComplete = false;
-                        System.Threading.Thread.Sleep(15000);
+                        System.Threading.Thread.Sleep(Main.Interval);
                     }
                 }
                 catch (WebException er)
                 {
                     Log(ConsoleColor.Red, $"{u.Account} 刷任务出错，error: {er.Message} ");
                     WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account} 刷任务出错，error: {er.Message} ", 2);
-                    System.Threading.Thread.Sleep(1000 * 15);
+                    System.Threading.Thread.Sleep(1000 * 10);
                 }
                 catch (Exception e)
                 {
                     Log(ConsoleColor.Red, $"{u.Account} 返回出错，error: {e.Message} ");
                     WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account} 返回出错，error: {e.Message} ", 2);
-                    System.Threading.Thread.Sleep(1000 * 155);
+                    System.Threading.Thread.Sleep(1000 * 10);
                 }
 
 

@@ -39,6 +39,8 @@ namespace leke
                     Log(ConsoleColor.Yellow, $"{u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！");
                     WeiXinHelper.CreateLog(u.Account, $"{u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！", 1);
                     WeiXinHelper.SendText(u.WeiXinId, $"{u.Account}  已经到了暂停任务时间 {Main.End} 点，任务停止，明天{Main.Begin}点开始刷！！", false);
+                    
+                    u.HasBiaoqian = false;
                     return;
                 }
                 if (u.BeginTime > hours)
@@ -46,6 +48,8 @@ namespace leke
                     Log(ConsoleColor.Yellow, $"{u.Account}  你设定的是 {u.BeginTime}点开始，现在是 {hours}点，任务停止 ！");
                     WeiXinHelper.CreateLog(u.Account, $"{u.Account}  你设定的是 {u.BeginTime}点开始，现在是 {hours}点，任务停止 ！", 1);
                     WeiXinHelper.SendText(u.WeiXinId, $"{u.Account}  你设定的是 {u.BeginTime}点开始，现在是 {hours}点，任务停止 ！", false);
+                   
+                    u.HasBiaoqian = false;
                     return;
                 }
                 if (u.cancelToken.IsCancellationRequested)
@@ -60,7 +64,7 @@ namespace leke
                 {
                     u.IsMax = false;
                     r = Getdingdan(u.Account, cookie);
-                   
+
                     if (r.code == "-1")
                     {
                         // Log(ConsoleColor.Green, $"{u.Account}   {r.msgs}");
@@ -82,12 +86,9 @@ namespace leke
 
                         WeiXinHelper.SendText(u.WeiXinId, $"{u.Account}   {r.msgs}，快去完成吧！", false);
                         WeiXinHelper.CreateLog(u.Account, $"{u.Account}   {r.msgs}，快去完成吧！", 1);
-                        if (!u.IsComplete)
-                        {
-                            Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
-                        }
+                        Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}");
                         u.IsComplete = true;
-                        System.Threading.Thread.Sleep(1000 * 60 );
+                        System.Threading.Thread.Sleep(1000 * 60*5);
                     }
                     else if (r.msgs.Contains("关闭任务"))
                     {
@@ -155,7 +156,7 @@ namespace leke
 
 
 
-               
+
 
                 Dictionary<string, string> postParams = new Dictionary<string, string>();
                 postParams.Add("username", account);

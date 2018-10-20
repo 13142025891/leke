@@ -60,7 +60,7 @@ namespace leke.entity
         public CancellationTokenSource cancelToken { get; set; }
         public string UserName { get; set; }
         public bool IsMax { get; set; }
-
+        public bool IsWapMax { get; set; }
         public bool HasBiaoqian { get; set; }
         public string WeiXinId { get; set; }
 
@@ -105,7 +105,7 @@ namespace leke.entity
 
         /// <summary>
         /// 微信别面：乐客 作为账号权限同一账号|,多账号@
-        /// 第一位：是否刷标签任务，每天几点开始
+        /// 第一位：是否运行：1运行，1停止，第二位：是否刷标签任务 1刷，0不刷，第三位 ：每天几点开始 配置0-23之间的数字
         /// </summary>
         public string alias { get; set; }
 

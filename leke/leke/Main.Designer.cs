@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -44,10 +42,10 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.UserName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Account = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.WeiXinId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Wap = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BeginTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.operation = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.refresh = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.WeiXinId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -75,7 +73,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(100, 21);
             this.textBox2.TabIndex = 3;
-            this.textBox2.Text = "10000";
+            this.textBox2.Text = "20000";
             // 
             // label3
             // 
@@ -122,7 +120,7 @@
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(75, 21);
             this.textBox4.TabIndex = 9;
-            this.textBox4.Text = "2";
+            this.textBox4.Text = "22";
             // 
             // label5
             // 
@@ -148,16 +146,15 @@
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.UserName,
             this.Account,
-            this.WeiXinId,
+            this.Wap,
+            this.status,
             this.BeginTime,
-            this.operation,
-            this.refresh});
+            this.WeiXinId});
             this.dataGridView1.Location = new System.Drawing.Point(78, 25);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 23;
             this.dataGridView1.Size = new System.Drawing.Size(527, 254);
             this.dataGridView1.TabIndex = 12;
-            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
             this.dataGridView1.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView1_DataError);
             // 
@@ -176,6 +173,30 @@
             this.Account.Name = "Account";
             this.Account.ReadOnly = true;
             // 
+            // Wap
+            // 
+            this.Wap.DataPropertyName = "Wap";
+            this.Wap.HeaderText = "标签";
+            this.Wap.Name = "Wap";
+            this.Wap.ReadOnly = true;
+            this.Wap.Width = 60;
+            // 
+            // status
+            // 
+            this.status.HeaderText = "状态";
+            this.status.Name = "status";
+            this.status.ReadOnly = true;
+            this.status.Width = 60;
+            // 
+            // BeginTime
+            // 
+            this.BeginTime.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.BeginTime.DataPropertyName = "BeginTime";
+            this.BeginTime.HeaderText = "开始时间";
+            this.BeginTime.Name = "BeginTime";
+            this.BeginTime.ReadOnly = true;
+            this.BeginTime.Width = 78;
+            // 
             // WeiXinId
             // 
             this.WeiXinId.DataPropertyName = "WeiXinId";
@@ -183,40 +204,11 @@
             this.WeiXinId.Name = "WeiXinId";
             this.WeiXinId.ReadOnly = true;
             // 
-            // BeginTime
-            // 
-            this.BeginTime.DataPropertyName = "BeginTime";
-            this.BeginTime.HeaderText = "开始";
-            this.BeginTime.Name = "BeginTime";
-            this.BeginTime.Width = 60;
-            // 
-            // operation
-            // 
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.NullValue = "停止";
-            this.operation.DefaultCellStyle = dataGridViewCellStyle1;
-            this.operation.HeaderText = "操作";
-            this.operation.Name = "operation";
-            this.operation.Text = "停止";
-            this.operation.Width = 60;
-            // 
-            // refresh
-            // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.NullValue = "更新";
-            this.refresh.DefaultCellStyle = dataGridViewCellStyle2;
-            this.refresh.HeaderText = "操作";
-            this.refresh.Name = "refresh";
-            this.refresh.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.refresh.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.refresh.Text = "更新";
-            this.refresh.Width = 60;
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(617, 376);
+            this.ClientSize = new System.Drawing.Size(616, 376);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -253,9 +245,9 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.DataGridViewTextBoxColumn UserName;
         private System.Windows.Forms.DataGridViewTextBoxColumn Account;
-        private System.Windows.Forms.DataGridViewTextBoxColumn WeiXinId;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Wap;
+        private System.Windows.Forms.DataGridViewTextBoxColumn status;
         private System.Windows.Forms.DataGridViewTextBoxColumn BeginTime;
-        private System.Windows.Forms.DataGridViewButtonColumn operation;
-        private System.Windows.Forms.DataGridViewButtonColumn refresh;
+        private System.Windows.Forms.DataGridViewTextBoxColumn WeiXinId;
     }
 }

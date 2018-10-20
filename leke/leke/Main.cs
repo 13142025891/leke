@@ -24,7 +24,7 @@ namespace leke
         public static List<int> ListHours;
         public static ConcurrentDictionary<string, User> dic;
         public static MessageBoxShow a1;
-
+        public static DateTime refrenshTime;
 
         public Main()
         {
@@ -33,9 +33,10 @@ namespace leke
 
         private void Main_Load(object sender, EventArgs e)
         {
+            refrenshTime = DateTime.Now.AddDays(-1);
             Interval = 20000;
             Begin = 8;
-            End = 2;
+            End = 22;
             dic = new ConcurrentDictionary<string, User>();
             a1 = new MessageBoxShow(ShowMessage);
             Task.Run(() =>
@@ -48,9 +49,10 @@ namespace leke
                         {
                             RefreshUser();
                         }
-
-                        System.Threading.Thread.Sleep(1000 * 60);
-                        //Console.Clear();
+                        
+                        System.Threading.Thread.Sleep(1000 * 60*10);
+                        Refresh();
+                        Console.Clear();
 
                     }
                 }
@@ -64,23 +66,17 @@ namespace leke
             // var str = File.ReadAllText("Users.json", Encoding.Default);
             //var lst = JsonConvert.DeserializeObject<List<User>>(str);
             //var sb = new StringBuilder();
-           
+
             this.dataGridView1.AutoGenerateColumns = false;
             dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.DataSource = new BindingList<User>();
-            //dataGridView1.DataBind();BindingList<PartSpec
-            // this.textBox1.Text = sb.ToString();
-            //foreach (var user in lst)
-            //{
-            //    user.IsRun = true;
-            //    user.cancelToken = new CancellationTokenSource();
-            //    dic.TryAdd(user.Account, user);
-            //}
+            
 
         }
         private bool RefreshUser()
         {
-           
+
             var list = WeiXinHelper.GetUsers();
             if (list.Count == 0)
             {
@@ -89,7 +85,7 @@ namespace leke
                 MessageBox.Show("没有获取到任何用户信息 ,请确认!");
                 return false;
             }
-            
+
             var startList = new List<string>();
             foreach (var user in list)
             {
@@ -107,20 +103,21 @@ namespace leke
                                 {
                                     Account = u.Account,
                                     IsRun = true,
-                                    Wap=user.Wap,
-                                    BeginTime=user.BeginTime,
+                                    Wap = user.Wap,
+                                    BeginTime = user.BeginTime,
                                     Pass = u.Pass,
                                     UserName = u.UserName,
                                     WeiXinId = u.WeiXinId,
                                     cancelToken = new CancellationTokenSource(),
                                     IsComplete = u.IsComplete,
                                     IsMax = u.IsMax,
+                                    IsWapMax=u.IsWapMax,
                                     HasBiaoqian = u.HasBiaoqian
 
                                 };
-                                ShowMessage(u,2);
+                                ShowMessage(u, 2);
                                 ShowMessage(newu, 1);
-                                
+
                                 dic.TryAdd(newu.Account, newu);
                                 startList.Add(newu.Account);
 
@@ -168,16 +165,31 @@ namespace leke
 
         }
 
-        private void Refresh(User u)
+        private void Refresh()
         {
             var hours = DateTime.Now.Hour;
-            if (hours >= Begin)
+            if (hours == Begin)
             {
-                u.IsMax = false;
+                if (refrenshTime.Date != DateTime.Now.Date)
+                {
+                   
+                    foreach (var d in dic.Keys)
+                    {
+                        if (dic.TryGetValue(d, out User u))
+                        {
+                            u.IsMax = false;
+                            u.HasBiaoqian = false;
+                            u.IsWapMax = false;
+                        }
+                    }
+                    refrenshTime = DateTime.Now;
+                    WeiXinHelper.SendText("", $" {Begin}点初始化所有线程！", false);
+                }
             }
-        }
+            
+      }
 
-        private void initHours()
+private void initHours()
         {
             ListHours = new List<int>();
             for (var i = Begin; i < 24; i++)
@@ -199,22 +211,23 @@ namespace leke
         }
         public void ShowMessage(User users, int type)
         {
-            Invoke(new MessageBoxShow(MessageBoxShow_F), new object[] { users,type });
+            Invoke(new MessageBoxShow(MessageBoxShow_F), new object[] { users, type });
         }
 
         public delegate void MessageBoxShow(User users, int type);
 
-        void MessageBoxShow_F(User users,int type)
+        void MessageBoxShow_F(User users, int type)
         {
             var currentUsers = this.dataGridView1.DataSource as BindingList<User>;
             if (type == 1)
             {
                 currentUsers.Add(users);
             }
-            else {
+            else
+            {
                 currentUsers.Remove(users);
             }
-            //this.dataGridView1.DataSource = users;
+            
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -226,21 +239,8 @@ namespace leke
                     WeiXinHelper.CreateLog("weixin", $"企业微信获取token出错", 2);
                     return;
                 }
-
-
-
                 if (!isRun)
                 {
-
-                    //var s = new User()
-                    //{
-                    //    Account = "d"
-                    //};
-                    //var u= this.dataGridView1.DataSource as  List<User>;
-                    //u.Add(s);
-
-                    //this.dataGridView1.DataSource = u;
-                    //dataGridView1.Refresh();
 
                     Console.Clear();
                     dic.Clear();
@@ -324,9 +324,9 @@ namespace leke
                                             helper.Login(u);
                                         }
 
-                                        System.Threading.Thread.Sleep(1000 * 60 * 10);
+                                        System.Threading.Thread.Sleep(1000 * 10*5);
                                         u.HasBiaoqian = false;
-                                        Refresh(u);
+                                        //Refresh(u);
 
                                     }
 
@@ -339,7 +339,7 @@ namespace leke
                                 }
                                 return 1;
                             });
-
+                            System.Threading.Thread.Sleep(1000 * 10);
                             if (u.Wap)
                             {
                                 Task.Run(() =>
@@ -355,13 +355,13 @@ namespace leke
                                             }
 
                                             var hours = DateTime.Now.Hour;
-                                            if (!u.IsMax && ListHours.Contains(hours))
+                                            if (!u.IsWapMax && ListHours.Contains(hours))
                                             {
                                                 waphelper.Login(u);
                                             }
                                             u.HasBiaoqian = false;
-                                            System.Threading.Thread.Sleep(1000 * 60 * 10);
-                                            Refresh(u);
+                                            System.Threading.Thread.Sleep(1000 * 60*5);
+                                            //Refresh(u);
                                         }
 
                                     }
@@ -391,11 +391,6 @@ namespace leke
             });
         }
 
-        private void StartFlush()
-        {
-
-        }
-
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -420,21 +415,21 @@ namespace leke
 
         private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            if (e.RowIndex > -1&& e.ColumnIndex==4)
+            if (e.RowIndex > -1 && e.ColumnIndex == 4)
             {
                 var acc = this.dataGridView1.Rows[e.RowIndex].Cells["Account"].Value.ToString();
 
                 if (dic.TryGetValue(acc, out User u))
                 {
-                    DataGridViewButtonCell vCell = (DataGridViewButtonCell)this.dataGridView1.Rows[e.RowIndex].Cells[4];
+                    DataGridViewTextBoxCell vCell = (DataGridViewTextBoxCell)this.dataGridView1.Rows[e.RowIndex].Cells["status"];
                     if (u.IsRun)
                     {
+                        vCell.Value = "运行";
+
+                    }
+                    else
+                    {
                         vCell.Value = "停止";
-
-                    }
-                    else
-                    {
-                        vCell.Value = "开始";
                     }
                 }
 
@@ -444,79 +439,7 @@ namespace leke
 
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex > -1)
-            {
-                var acc = this.dataGridView1.Rows[e.RowIndex].Cells["Account"].Value.ToString();
-
-                if (dic.TryGetValue(acc, out User u))
-                {
-
-                    if (dataGridView1.Columns[e.ColumnIndex].Name == "operation")
-                    {
-                        DataGridViewButtonCell vCell = (DataGridViewButtonCell)dataGridView1.CurrentCell;
-                        //dataGridView1.Columns[e.ColumnIndex].ValueType.
-
-                        if (vCell.FormattedValue.ToString() == "停止")
-                        {
-                            vCell.Value = "开始";
-                            u.cancelToken.Cancel();
-                            u.IsRun = false;
-                        }
-                        else
-                        {
-                            if (dic.TryRemove(acc, out User uu))
-                            {
-                                vCell.Value = "停止";
-                                //u.cancelToken = new CancellationTokenSource();
-
-                                var newu = new User
-                                {
-                                    Account = u.Account,
-                                    BeginTime = u.BeginTime,
-                                    IsRun = true,
-                                    Pass = u.Pass,
-                                    UserName = u.UserName,
-                                    Wap = u.Wap,
-                                    WeiXinId = u.WeiXinId,
-                                    cancelToken = new CancellationTokenSource(),
-                                    IsComplete = u.IsComplete,
-                                    IsMax = u.IsMax
-
-                                };
-                                var users = this.dataGridView1.DataSource as BindingList<User>;
-                                users.Remove(uu);
-                                users.Add(newu);
-                                dic.TryAdd(newu.Account, newu);
-                                Start(new List<string>() { u.Account });
-                                //this.dataGridView1.DataSource = users;
-                            }
-
-                        }
-
-                    }
-                    else
-                    {
-                        DataGridViewTextBoxCell vCell = (DataGridViewTextBoxCell)this.dataGridView1.Rows[e.RowIndex].Cells[3];
-
-                        var BeginTime = this.dataGridView1.Rows[e.RowIndex].Cells["BeginTime"].Value;
-                        var flag = int.TryParse(BeginTime.ToString(), out int be);
-                        vCell.Value = be > 23 ? 0 : be;
-                        if (!flag)
-                        {
-                            MessageBox.Show("请输入0-23的数字！");
-                        }
-
-
-
-                    }
-                }
-
-
-
-            }
-        }
+        
 
         private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {

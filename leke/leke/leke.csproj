@@ -58,6 +58,7 @@
     <Compile Include="entity\base.cs" />
     <Compile Include="entity\Msg.cs" />
     <Compile Include="entity\User.cs" />
+    <Compile Include="filemanager.cs" />
     <Compile Include="waphelper.cs" />
     <Compile Include="helper.cs" />
     <Compile Include="Main.cs">
@@ -80,9 +81,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="Users.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Main.resx">

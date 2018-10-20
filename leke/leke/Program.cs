@@ -33,8 +33,8 @@ namespace leke
             //    sr.Dispose();
             //}
 
-
-            //return;
+            //ImageManagerHelper.ImageUpLoad(null);
+           // return;
 
            
 

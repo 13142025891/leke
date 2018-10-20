@@ -1,6 +1,7 @@
 ﻿using leke.entity;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,7 +21,22 @@ namespace leke
         static string getUsers = System.Configuration.ConfigurationManager.AppSettings["getUsers"].ToString();
         static string userGroup = System.Configuration.ConfigurationManager.AppSettings["userGroup"].ToString();
 
+        static string adminUser = System.Configuration.ConfigurationManager.AppSettings["adminUser"].ToString();
         
+        //public static ConcurrentQueue<string> queue;
+        //static WeiXinHelper()
+        //{
+        //    Task.Run(()=> {
+        //        while (true)
+        //        {
+        //            if (queue.TryDequeue(out string par))
+        //            { }
+        //        }
+
+
+
+        //    });
+        //}
 
         /// <summary>
         /// 获取企业号的accessToken
@@ -94,7 +110,7 @@ namespace leke
                 //helper.Log(ConsoleColor.Red, "★★★★★" + ex);
                 WeiXinHelper.SendText("13142025891", "★★★★★" + ex, false);
                 //Login(u);
-
+                return ex.Message;
 
             }
             catch (Exception ex)
@@ -118,10 +134,15 @@ namespace leke
         /// <returns></returns>
         public static void SendText(string empCode, string message,bool isAdmin)
         {
-            if (isAdmin&& empCode!="13142025891")
+            if (isAdmin && (empCode != "13142025891" || empCode == ""))
             {
-                empCode = empCode + "|13142025891";//|15005854060
+                if (empCode != "")
+                {
+                    empCode = empCode + "|";
+                }
+                empCode = empCode + adminUser;
             }
+          
             string accessToken = "";
             string postUrl = "";
             string param = "";
