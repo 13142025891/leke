@@ -49,8 +49,8 @@ namespace leke
                         {
                             RefreshUser();
                         }
-                        
-                        System.Threading.Thread.Sleep(1000 * 60*10);
+
+                        System.Threading.Thread.Sleep(1000 * 60 * 10);
                         Refresh();
                         Console.Clear();
 
@@ -70,8 +70,8 @@ namespace leke
             this.dataGridView1.AutoGenerateColumns = false;
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.DataSource = new BindingList<User>();
-            
+
+
 
         }
         private bool RefreshUser()
@@ -111,8 +111,10 @@ namespace leke
                                     cancelToken = new CancellationTokenSource(),
                                     IsComplete = u.IsComplete,
                                     IsMax = u.IsMax,
-                                    IsWapMax=u.IsWapMax,
-                                    HasBiaoqian = u.HasBiaoqian
+                                    IsWapMax = u.IsWapMax,
+                                    HasBiaoqian = u.HasBiaoqian,
+                                    EndTime = user.EndTime,
+                                    days = user.days
 
                                 };
                                 ShowMessage(u, 2);
@@ -128,6 +130,8 @@ namespace leke
                         {
                             u.Wap = user.Wap;
                             u.BeginTime = user.BeginTime;
+                            u.EndTime = user.EndTime;
+                            u.days = user.days;
                         }
                     }
                     else
@@ -145,12 +149,17 @@ namespace leke
 
                         startList.Add(user.Account);
                     }
-                    dic.TryAdd(user.Account, user);
-                    ShowMessage(user, 1);
+                    if (user.group == WeiXinHelper.userGroup)
+                    {
+                        dic.TryAdd(user.Account, user);
+                        ShowMessage(user, 1);
+                    }
+
+
                 }
             }
             Start(startList);
-            //ShowMessage(currentUsers);
+            ShowMessage(null, 3);
             return true;
         }
         private void initUser()
@@ -172,7 +181,7 @@ namespace leke
             {
                 if (refrenshTime.Date != DateTime.Now.Date)
                 {
-                   
+
                     foreach (var d in dic.Keys)
                     {
                         if (dic.TryGetValue(d, out User u))
@@ -186,10 +195,10 @@ namespace leke
                     WeiXinHelper.SendText("", $" {Begin}点初始化所有线程！", false);
                 }
             }
-            
-      }
 
-private void initHours()
+        }
+
+        private void initHours()
         {
             ListHours = new List<int>();
             for (var i = Begin; i < 24; i++)
@@ -223,11 +232,14 @@ private void initHours()
             {
                 currentUsers.Add(users);
             }
-            else
+            else if (type == 2)
             {
                 currentUsers.Remove(users);
             }
-            
+            else
+            {
+                this.dataGridView1.Refresh();
+            }
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -244,6 +256,7 @@ private void initHours()
 
                     Console.Clear();
                     dic.Clear();
+                    this.dataGridView1.DataSource = new BindingList<User>();
                     if (int.TryParse(textBox2.Text, out int interval))
                     {
                         Interval = interval;
@@ -313,7 +326,8 @@ private void initHours()
                                     {
                                         if (u.cancelToken.IsCancellationRequested)
                                         {
-                                            helper.Log(ConsoleColor.Red, u.Account + " 停止");
+                                            helper.Log(ConsoleColor.Red, u.Account + " 停止,退出线程");
+                                            WeiXinHelper.CreateLog(u.Account, "停止,退出线程", 1);
                                             break;
 
                                         }
@@ -323,8 +337,9 @@ private void initHours()
                                         {
                                             helper.Login(u);
                                         }
-
-                                        System.Threading.Thread.Sleep(1000 * 10*5);
+                                        helper.Log(ConsoleColor.Red, u.Account + " 不再程序执行时间内或者 今天已经max!");
+                                        WeiXinHelper.CreateLog(u.Account, "不再程序执行时间内或者 今天已经max!", 1);
+                                        System.Threading.Thread.Sleep(1000 * 10 * 5);
                                         u.HasBiaoqian = false;
                                         //Refresh(u);
 
@@ -350,7 +365,8 @@ private void initHours()
                                         {
                                             if (u.cancelToken.IsCancellationRequested)
                                             {
-                                                helper.Log(ConsoleColor.Red, u.Account + " 停止");
+                                                helper.Log(ConsoleColor.Red, u.Account + " 停止,退出线程");
+                                                WeiXinHelper.CreateLog(u.Account, "停止,退出线程", 1);
                                                 break;
                                             }
 
@@ -359,8 +375,10 @@ private void initHours()
                                             {
                                                 waphelper.Login(u);
                                             }
+                                            helper.Log(ConsoleColor.Red, u.Account + " 不再程序执行时间内或者 今天已经max!");
+                                            WeiXinHelper.CreateLog(u.Account, "不再程序执行时间内或者 今天已经max!", 1);
                                             u.HasBiaoqian = false;
-                                            System.Threading.Thread.Sleep(1000 * 60*5);
+                                            System.Threading.Thread.Sleep(1000 * 60 * 5);
                                             //Refresh(u);
                                         }
 
@@ -439,7 +457,7 @@ private void initHours()
 
         }
 
-        
+
 
         private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {

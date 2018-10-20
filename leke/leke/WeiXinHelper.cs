@@ -19,7 +19,7 @@ namespace leke
         static string corpsecret = System.Configuration.ConfigurationManager.AppSettings["secret"].ToString();
         static string messageSendURI = System.Configuration.ConfigurationManager.AppSettings["messageSendURI"].ToString();
         static string getUsers = System.Configuration.ConfigurationManager.AppSettings["getUsers"].ToString();
-        static string userGroup = System.Configuration.ConfigurationManager.AppSettings["userGroup"].ToString();
+       public static string userGroup = System.Configuration.ConfigurationManager.AppSettings["userGroup"].ToString();
 
         static string adminUser = System.Configuration.ConfigurationManager.AppSettings["adminUser"].ToString();
         
@@ -231,13 +231,8 @@ namespace leke
                 if (jArray != null&& jArray.userlist!=null&& jArray.userlist.Count > 0)
                 {
                     jArray.userlist.ForEach(p=> {
-                        if (p.telephone == userGroup)
-                        {
-
-                            list.AddRange(User.Clone(p));
-                        }
-
-                    });
+                         list.AddRange(User.Clone(p));
+                       });
                 }
 
             }

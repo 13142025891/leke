@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -46,17 +45,10 @@
             this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BeginTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.WeiXinId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.EndTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.days = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 25);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 12);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Account :";
             // 
             // label2
             // 
@@ -149,11 +141,13 @@
             this.Wap,
             this.status,
             this.BeginTime,
-            this.WeiXinId});
-            this.dataGridView1.Location = new System.Drawing.Point(78, 25);
+            this.WeiXinId,
+            this.EndTime,
+            this.days});
+            this.dataGridView1.Location = new System.Drawing.Point(12, 25);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 23;
-            this.dataGridView1.Size = new System.Drawing.Size(527, 254);
+            this.dataGridView1.Size = new System.Drawing.Size(593, 254);
             this.dataGridView1.TabIndex = 12;
             this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
             this.dataGridView1.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView1_DataError);
@@ -172,6 +166,7 @@
             this.Account.HeaderText = "账号";
             this.Account.Name = "Account";
             this.Account.ReadOnly = true;
+            this.Account.Width = 80;
             // 
             // Wap
             // 
@@ -179,23 +174,22 @@
             this.Wap.HeaderText = "标签";
             this.Wap.Name = "Wap";
             this.Wap.ReadOnly = true;
-            this.Wap.Width = 60;
+            this.Wap.Width = 40;
             // 
             // status
             // 
             this.status.HeaderText = "状态";
             this.status.Name = "status";
             this.status.ReadOnly = true;
-            this.status.Width = 60;
+            this.status.Width = 40;
             // 
             // BeginTime
             // 
-            this.BeginTime.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
             this.BeginTime.DataPropertyName = "BeginTime";
             this.BeginTime.HeaderText = "开始时间";
             this.BeginTime.Name = "BeginTime";
             this.BeginTime.ReadOnly = true;
-            this.BeginTime.Width = 78;
+            this.BeginTime.Width = 80;
             // 
             // WeiXinId
             // 
@@ -203,6 +197,23 @@
             this.WeiXinId.HeaderText = "企业微信";
             this.WeiXinId.Name = "WeiXinId";
             this.WeiXinId.ReadOnly = true;
+            this.WeiXinId.Width = 80;
+            // 
+            // EndTime
+            // 
+            this.EndTime.DataPropertyName = "EndTime";
+            this.EndTime.HeaderText = "到期日";
+            this.EndTime.Name = "EndTime";
+            this.EndTime.ReadOnly = true;
+            this.EndTime.Width = 80;
+            // 
+            // days
+            // 
+            this.days.DataPropertyName = "days";
+            this.days.HeaderText = "天数";
+            this.days.Name = "days";
+            this.days.ReadOnly = true;
+            this.days.Width = 40;
             // 
             // Main
             // 
@@ -219,7 +230,6 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Main";
             this.Text = "Main";
@@ -231,8 +241,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label3;
@@ -249,5 +257,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn status;
         private System.Windows.Forms.DataGridViewTextBoxColumn BeginTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn WeiXinId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EndTime;
+        private System.Windows.Forms.DataGridViewTextBoxColumn days;
     }
 }
