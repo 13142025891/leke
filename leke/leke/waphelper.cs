@@ -62,14 +62,15 @@ namespace leke
                     }
                     if (r.code == "-1")
                     {
-                        // Log(ConsoleColor.Green, $"{u.Account}   {r.msgs}");
-                        //WeiXinHelper.CreateLog("wap"+u.Account, $"{u.Account}   {r.msgs}", 2);
-                        // WeiXinHelper.SendText("13142025891", $"{u.Account} 需要验证，暂停10分钟！重新登录！",false);
-
+                        System.Threading.Thread.Sleep(1000 * 60 * 5);
+                    }
+                    else if (r.code == "8")
+                    {
+                        System.Threading.Thread.Sleep(1000 * 60);
                     }
                     else if (r.code == "2")//登录超时
                     {
-
+                        WeiXinHelper.SendText("", $"手机端 {u.Account}  {r.msgs}", true);
                     }
                     else if (r.code == "1")
                     {
@@ -77,7 +78,7 @@ namespace leke
                         //u.IsComplete = true;
                         //Main.a1.Invoke($"{u.Account}   {r.msgs}");
                         Log(ConsoleColor.Green, $"{u.Account}   {r.msgs}");
-                        WeiXinHelper.SendText(u.WeiXinId, $"手机端 {u.Account}  已经刷到任务，马上去做吧！", true);
+                        WeiXinHelper.SendText(u.WeiXinId, $"手机端 {u.Account}  已经刷到任务，马上去做吧！", false);
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}  已经刷到任务，马上去做吧！", 1);
                         System.Threading.Thread.Sleep(1000 * 60 * 5);
                     }
