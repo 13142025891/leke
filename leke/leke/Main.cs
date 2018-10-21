@@ -85,6 +85,9 @@ namespace leke
                 MessageBox.Show("没有获取到任何用户信息 ,请确认!");
                 return false;
             }
+            else {
+                WeiXinHelper.CreateLog("main", " 拉取用户数据成功", 1);
+            }
 
             var startList = new List<string>();
             foreach (var user in list)
