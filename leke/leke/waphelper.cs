@@ -66,7 +66,7 @@ namespace leke
                     }
                     else if (r.code == "8")
                     {
-                        System.Threading.Thread.Sleep(1000 * 60);
+                        System.Threading.Thread.Sleep(1000 * 60*5);
                     }
                     else if (r.code == "2")//登录超时
                     {
