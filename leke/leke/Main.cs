@@ -320,7 +320,6 @@ namespace leke
                         if (dic.TryGetValue(d, out User u))
                         {
 
-
                             Task.Run(() =>
                             {
                                 try
@@ -332,20 +331,18 @@ namespace leke
                                             helper.Log(ConsoleColor.Red, u.Account + " 停止,退出线程");
                                             WeiXinHelper.CreateLog(u.Account, "停止,退出线程", 1);
                                             break;
-
                                         }
 
                                         var hours = DateTime.Now.Hour;
-                                        if (!u.IsMax && ListHours.Contains(hours) && u.BeginTime <= hours)
+                                        if (!u.IsWapMax && ListHours.Contains(hours))
                                         {
-                                            helper.Login(u);
+                                            waphelper.Login(u);
                                         }
                                         helper.Log(ConsoleColor.Red, u.Account + " 不再程序执行时间内或者 今天已经max!");
                                         WeiXinHelper.CreateLog(u.Account, "不再程序执行时间内或者 今天已经max!", 1);
-                                        System.Threading.Thread.Sleep(1000 * 10 * 5);
                                         u.HasBiaoqian = false;
+                                        System.Threading.Thread.Sleep(1000 * 60 * 5);
                                         //Refresh(u);
-
                                     }
 
                                 }
@@ -357,6 +354,7 @@ namespace leke
                                 }
                                 return 1;
                             });
+                            
                             System.Threading.Thread.Sleep(1000 * 10);
                             if (u.Wap)
                             {
@@ -371,18 +369,20 @@ namespace leke
                                                 helper.Log(ConsoleColor.Red, u.Account + " 停止,退出线程");
                                                 WeiXinHelper.CreateLog(u.Account, "停止,退出线程", 1);
                                                 break;
+
                                             }
 
                                             var hours = DateTime.Now.Hour;
-                                            if (!u.IsWapMax && ListHours.Contains(hours))
+                                            if (!u.IsMax && ListHours.Contains(hours) && u.BeginTime <= hours)
                                             {
-                                                waphelper.Login(u);
+                                                helper.Login(u);
                                             }
                                             helper.Log(ConsoleColor.Red, u.Account + " 不再程序执行时间内或者 今天已经max!");
                                             WeiXinHelper.CreateLog(u.Account, "不再程序执行时间内或者 今天已经max!", 1);
+                                            System.Threading.Thread.Sleep(1000 * 10 * 5);
                                             u.HasBiaoqian = false;
-                                            System.Threading.Thread.Sleep(1000 * 60 * 5);
                                             //Refresh(u);
+
                                         }
 
                                     }

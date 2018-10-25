@@ -85,12 +85,12 @@ namespace leke
                      
                     else if (r.msgs.Contains("任务没完成") || r.msgs.Contains("评价") || r.msgs.Contains("工单未处理"))
                     {
-                        if (r.msgs.Contains("标签任务没完成"))
+                        if (r.msgs.Contains("标签任务没完成")&&u.Wap)
                         {
                             Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}, 转刷普通任务！");
                             u.HasBiaoqian = true;
                         }
-                        if(r.msgs.Contains("进行中的任务没完成"))
+                        if(r.msgs.Contains("进行中的任务没完成") && u.Wap)
                         {
                             Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}, 转刷标签任务！");
                             u.HasBiaoqian = false;
@@ -270,13 +270,14 @@ namespace leke
         {
             var account = u.Account;
             Dictionary<string, string> postParams = new Dictionary<string, string>();
-            var task = taskurl;
-            var type = "3";
-            if (u.HasBiaoqian)
+            var task = taskurl1;
+            var type = "1";
+            if (u.Wap && !u.HasBiaoqian)
             {
-                task = taskurl1;
-                type = "1";
+                task = taskurl;
+                type = "3";
             }
+           
             postParams.Add("task_type", type);
 
             postParams.Add("maxmoney", "2000");
