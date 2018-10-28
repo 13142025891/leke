@@ -334,7 +334,7 @@ namespace leke
                                         }
 
                                         var hours = DateTime.Now.Hour;
-                                        if (!u.IsWapMax && ListHours.Contains(hours))
+                                        if (!u.IsWapMax && ListHours.Contains(hours) && u.BeginTime <= hours)
                                         {
                                             waphelper.Login(u);
                                         }
