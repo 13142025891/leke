@@ -133,11 +133,49 @@ namespace leke
                         }
                         else
                         {
-                            u.Wap = user.Wap;
-                            u.PC = user.PC;
-                            u.BeginTime = user.BeginTime;
-                            u.EndTime = user.EndTime;
-                            u.days = user.days;
+                            if (user.PC != u.PC)
+                            {
+                                u.IsRun = false;
+                                u.cancelToken.Cancel();
+                                if (dic.TryRemove(user.Account, out u))
+                                {
+
+                                    var newu = new User
+                                    {
+                                        Account = u.Account,
+                                        IsRun = true,
+                                        Wap = user.Wap,
+                                        BeginTime = user.BeginTime,
+                                        Pass = u.Pass,
+                                        UserName = u.UserName,
+                                        WeiXinId = u.WeiXinId,
+                                        cancelToken = new CancellationTokenSource(),
+                                        IsComplete = u.IsComplete,
+                                        IsMax = u.IsMax,
+                                        IsWapMax = u.IsWapMax,
+                                        HasBiaoqian = u.HasBiaoqian,
+                                        EndTime = user.EndTime,
+                                        days = user.days,
+                                        PC = user.PC
+
+
+                                    };
+                                    ShowMessage(u, 2);
+                                    ShowMessage(newu, 1);
+
+                                    dic.TryAdd(newu.Account, newu);
+                                    startList.Add(newu.Account);
+
+                                }
+                            }
+                            else {
+                                u.Wap = user.Wap;
+                                u.PC = user.PC;
+                                u.BeginTime = user.BeginTime;
+                                u.EndTime = user.EndTime;
+                                u.days = user.days;
+                            }
+                            
                         }
                     }
                     else
