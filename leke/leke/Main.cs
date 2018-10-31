@@ -117,7 +117,9 @@ namespace leke
                                     IsWapMax = u.IsWapMax,
                                     HasBiaoqian = u.HasBiaoqian,
                                     EndTime = user.EndTime,
-                                    days = user.days
+                                    days = user.days,
+                                    PC=user.PC
+                                    
 
                                 };
                                 ShowMessage(u, 2);
@@ -132,6 +134,7 @@ namespace leke
                         else
                         {
                             u.Wap = user.Wap;
+                            u.PC = user.PC;
                             u.BeginTime = user.BeginTime;
                             u.EndTime = user.EndTime;
                             u.days = user.days;
@@ -356,7 +359,7 @@ namespace leke
                             });
                             
                             System.Threading.Thread.Sleep(1000 * 10);
-                            if (u.Wap)
+                            if (u.PC)
                             {
                                 Task.Run(() =>
                                 {

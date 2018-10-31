@@ -20,8 +20,8 @@ namespace leke.entity
                 UserName = u.UserName,
                 Wap = u.Wap,
                 WeiXinId = u.WeiXinId,
-                cancelToken = new CancellationTokenSource()
-
+                cancelToken = new CancellationTokenSource(),
+                PC = u.PC
 
 
             };
@@ -38,6 +38,12 @@ namespace leke.entity
                 {
                     var peizhi = u.alias.Split(new[] { '@' }, StringSplitOptions.RemoveEmptyEntries)[i].Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                     var str = userList[i].Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    var pc = false;
+                    if (peizhi.Count() == 4)
+                    {
+                        pc = peizhi[3] == "0" ? false : true;
+                    }
+                    
                     var model = new User
                     {
                         Account = str[0],
@@ -47,7 +53,9 @@ namespace leke.entity
                         UserName = u.name,
                         Wap = peizhi[1] == "0" ? false : true,
                         WeiXinId = u.userid,
-                        group = u.telephone
+                        group = u.telephone,
+                        PC = pc
+
                     };
 
                     var time = DateTime.Now;
@@ -87,6 +95,7 @@ namespace leke.entity
         public bool HasBiaoqian { get; set; }
         public string WeiXinId { get; set; }
 
+        public bool PC { get; set; }
         public bool Wap { get; set; }
         public int BeginTime { get; set; }
         public bool IsRun { get; set; }
