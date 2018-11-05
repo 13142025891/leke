@@ -62,8 +62,10 @@ namespace leke.entity
                     var days = 0;
                     if (!string.IsNullOrEmpty(u.email))
                     {
-                        var email = u.email.Split(new[] { '@' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                        var times = email[0].Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                        var arr = u.email.Split(new[] { '@' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                        var emails = arr[0].Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                       // var email = emails[i].Split(new[] { '@' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                        var times = emails[i].Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                         time = Convert.ToDateTime(times[0]);
                         days = Convert.ToInt32(times[1]);
                         model.EndTime = time.ToString("yyyy-MM-dd");
