@@ -12,7 +12,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.ComponentModel;
 namespace leke
 {
     public partial class Main : Form
@@ -81,11 +80,12 @@ namespace leke
             if (list.Count == 0)
             {
                 WeiXinHelper.CreateLog("main", " 没有获取到任何用户信息", 2);
-                WeiXinHelper.SendText("13142025891", " 没有获取到任何用户信息", false);
+                WeiXinHelper.SendText("", " 没有获取到任何用户信息", true);
                 MessageBox.Show("没有获取到任何用户信息 ,请确认!");
                 return false;
             }
-            else {
+            else
+            {
                 WeiXinHelper.CreateLog("main", " 拉取用户数据成功", 1);
             }
 
@@ -95,6 +95,7 @@ namespace leke
                 User u = null;
                 if (dic.TryGetValue(user.Account, out u))
                 {
+
                     if (user.IsRun)
                     {
                         if (!u.IsRun)
@@ -118,8 +119,8 @@ namespace leke
                                     HasBiaoqian = u.HasBiaoqian,
                                     EndTime = user.EndTime,
                                     days = user.days,
-                                    PC=user.PC
-                                    
+                                    PC = user.PC
+
 
                                 };
                                 ShowMessage(u, 2);
@@ -168,20 +169,28 @@ namespace leke
 
                                 }
                             }
-                            else {
+                            else
+                            {
                                 u.Wap = user.Wap;
                                 u.PC = user.PC;
                                 u.BeginTime = user.BeginTime;
                                 u.EndTime = user.EndTime;
                                 u.days = user.days;
                             }
-                            
+
                         }
                     }
                     else
                     {
                         u.IsRun = false;
                         u.cancelToken.Cancel();
+                        if (user.group != WeiXinHelper.userGroup)
+                        {
+                            if (dic.TryRemove(user.Account, out u))
+                            {
+                                ShowMessage(u, 2);
+                            }
+                        }
                     }
 
                 }
@@ -198,7 +207,6 @@ namespace leke
                         dic.TryAdd(user.Account, user);
                         ShowMessage(user, 1);
                     }
-
 
                 }
             }
@@ -395,7 +403,7 @@ namespace leke
                                 }
                                 return 1;
                             });
-                            
+
                             System.Threading.Thread.Sleep(1000 * 10);
                             if (u.PC)
                             {
