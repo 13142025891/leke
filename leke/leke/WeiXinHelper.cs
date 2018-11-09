@@ -231,8 +231,7 @@ namespace leke
                 if (jArray != null&& jArray.userlist!=null&& jArray.userlist.Count > 0)
                 {
                     jArray.userlist.ForEach(p=> {
-                        if(p.telephone=="3")
-                         list.AddRange(User.Clone(p));
+                        list.AddRange(User.Clone(p));
                        });
                 }
 
