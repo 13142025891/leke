@@ -24,7 +24,7 @@ namespace leke
         public static void Do(User u, string cookie)
         {
             Log(ConsoleColor.Green, $"{u.Account} 已开始刷任务，请等待。。。");
-            WeiXinHelper.SendText("13142025891", $"wap {u.Account} 已经登录成功，开始刷任务请等待。。。", false);
+            WeiXinHelper.SendText("", $"wap {u.Account} 已经登录成功，开始刷任务请等待。。。", false);
             while (true)
             {
                 if (!Main.isRun)

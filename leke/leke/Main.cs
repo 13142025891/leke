@@ -345,7 +345,7 @@ namespace leke
             {
                 WeiXinHelper.CreateLog("main", "★★★★★" + ex, 2);
                 helper.Log(ConsoleColor.Red, "★★★★★" + ex);
-                WeiXinHelper.SendText("13142025891", "★★★★★" + ex, false);
+                WeiXinHelper.SendText("", "★★★★★" + ex, true);
             }
 
 
@@ -369,8 +369,8 @@ namespace leke
                                     {
                                         if (u.cancelToken.IsCancellationRequested)
                                         {
-                                            helper.Log(ConsoleColor.Red, u.Account + " 停止,退出线程");
-                                            WeiXinHelper.CreateLog(u.Account, "停止,退出线程", 1);
+                                            helper.Log(ConsoleColor.Red, u.Account + "wap 停止,退出线程");
+                                            WeiXinHelper.CreateLog(u.Account, "wap 停止,退出线程", 1);
                                             break;
                                         }
 
@@ -379,8 +379,8 @@ namespace leke
                                         {
                                             waphelper.Login(u);
                                         }
-                                        helper.Log(ConsoleColor.Red, u.Account + " 不再程序执行时间内或者 今天已经max!");
-                                        WeiXinHelper.CreateLog(u.Account, "不再程序执行时间内或者 今天已经max!", 1);
+                                        helper.Log(ConsoleColor.Red, u.Account + "wap 不再程序执行时间内或者 今天已经max!");
+                                        WeiXinHelper.CreateLog(u.Account, "wap 不再程序执行时间内或者 今天已经max!", 1);
                                         u.HasBiaoqian = false;
                                         System.Threading.Thread.Sleep(1000 * 60 * 5);
                                         //Refresh(u);
@@ -391,7 +391,7 @@ namespace leke
                                 {
                                     WeiXinHelper.CreateLog(u.Account, "★★★★★" + ex, 2);
                                     helper.Log(ConsoleColor.Red, "★★★★★" + ex);
-                                    WeiXinHelper.SendText("13142025891", "★★★★★" + ex, false);
+                                    WeiXinHelper.SendText("", "★★★★★" + ex, true);
                                 }
                                 return 1;
                             });
@@ -431,7 +431,7 @@ namespace leke
                                     {
                                         WeiXinHelper.CreateLog(u.Account, "★★★★★" + ex, 2);
                                         helper.Log(ConsoleColor.Red, "★★★★★" + ex);
-                                        WeiXinHelper.SendText("13142025891", "★★★★★" + ex, false);
+                                        WeiXinHelper.SendText("", "★★★★★" + ex, true);
                                     }
                                     return 1;
                                 });
@@ -447,7 +447,7 @@ namespace leke
                 {
                     WeiXinHelper.CreateLog("main", "★★★★★" + ex, 2);
                     helper.Log(ConsoleColor.Red, "★★★★★" + ex);
-                    WeiXinHelper.SendText("13142025891", "★★★★★" + ex, false);
+                    WeiXinHelper.SendText("", "★★★★★" + ex, true);
                 }
                 return 1;
             });
