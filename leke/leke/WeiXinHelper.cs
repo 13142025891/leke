@@ -231,7 +231,7 @@ namespace leke
                 if (jArray != null&& jArray.userlist!=null&& jArray.userlist.Count > 0)
                 {
                     jArray.userlist.ForEach(p=> {
-                       list.AddRange(User.Clone(p));
+                        list.AddRange(User.Clone(p));
                        });
                 }
 
@@ -240,7 +240,7 @@ namespace leke
             {
                 WeiXinHelper.CreateLog("main", "★★★★★" + ex, 2);
                 //helper.Log(ConsoleColor.Red, "★★★★★" + ex);
-                WeiXinHelper.SendText("13142025891", "★★★★★" + ex, false);
+                WeiXinHelper.SendText("", "★★★★★" + ex, true);
                 //Login(u);
 
 
@@ -249,7 +249,7 @@ namespace leke
             {
                 WeiXinHelper.CreateLog("main", "★★★★★" + ex, 2);
                 //helper.Log(ConsoleColor.Red, "★★★★★" + ex);
-                WeiXinHelper.SendText("13142025891", "★★★★★" + ex, false);
+                WeiXinHelper.SendText("", "★★★★★" + ex, true);
             }
           
             return list;
