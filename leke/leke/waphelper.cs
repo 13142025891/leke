@@ -13,11 +13,11 @@ namespace leke
     public class waphelper
     {
 
-        public const string logUrl = "http://w.58leke.com/index.php?s=/Wapusers/login.html";
+        //                                            
+        public const string logUrl = "http://w.58leke.cn/index.php?s=/Wapusers/login.html";
 
-        public const string taskurl1 = "http://w.58leke.com/index.php?s=/Wapajax/taskset.html";
-
-        public const string taskurl = "http://w.58leke.com/index.php?s=/Wapajax/tasksets2.html";
+        public const string taskurl1 ="http://w.58leke.cn/index.php?s=/Wapajax/taskset.html";
+        public const string taskurl = "http://w.58leke.cn/index.php?s=/Wapajax/tasksets2.html";
 
         public const string task = "";
 
@@ -306,11 +306,11 @@ namespace leke
             request.ContentLength = postData.Length;
             request.AllowAutoRedirect = false;
             request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36";
-            request.Host = "w.58leke.com";
+            request.Host = "w.58leke.cn";
             request.Accept = "application/json, text/javascript, */*; q=0.01";
-            request.Headers.Add("Origin", "http://w.58leke.com");
+            request.Headers.Add("Origin", "http://w.58leke.cn");
             request.Headers.Add("X-Requested-With", "XMLHttpRequest");
-            request.Referer = "http://w.58leke.com/index.php?s=/Wapindex/index.html";
+            request.Referer = "http://w.58leke.cn/index.php?s=/Wapindex/index.html";
             request.Headers.Add("Cookie", cookie.Replace("path=/,", ""));
 
 
@@ -381,7 +381,7 @@ namespace leke
             //设置打开页面的参数
             TimeSpan cha = (DateTime.Now - TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1)));
 
-            request = WebRequest.Create("http://s.58leke.com/gt3/pc-geetest/register?t=" + cha.TotalSeconds) as HttpWebRequest;
+            request = WebRequest.Create("http://s.58leke.cn/gt3/pc-geetest/register?t=" + cha.TotalSeconds) as HttpWebRequest;
             request.Method = "GET";
             request.KeepAlive = false;
             request.AllowAutoRedirect = false;
@@ -400,7 +400,7 @@ namespace leke
             Log(ConsoleColor.Yellow, $"{account}  调用乐客验证码数据成功！{srcString}");
             WeiXinHelper.CreateLog("wap" + account, $"{account}  调用乐客验证码数据成功！{srcString}", 3);
             sb.AppendLine($"{account}  调用乐客验证码数据成功！{srcString}");
-            HttpWebRequest request1 = WebRequest.Create($"http://jiyanapi.c2567.com/shibie?gt={jArray.gt}&challenge={jArray.challenge}&referer=http://s.58leke.com&user=13142025891&pass=anye520fei&return=json&model=3&format=utf8") as HttpWebRequest;
+            HttpWebRequest request1 = WebRequest.Create($"http://jiyanapi.c2567.com/shibie?gt={jArray.gt}&challenge={jArray.challenge}&referer=http://s.58leke.cn&user=13142025891&pass=anye520fei&return=json&model=3&format=utf8") as HttpWebRequest;
             request1.Method = "GET";
             request1.KeepAlive = false;
             request1.AllowAutoRedirect = false;
@@ -444,7 +444,7 @@ namespace leke
             byte[] postData = Encoding.ASCII.GetBytes(postString);
 
             // 设置提交的相关参数
-            HttpWebRequest request = WebRequest.Create("http://s.58leke.com/gt3/pc-geetest/ajax_validate") as HttpWebRequest;
+            HttpWebRequest request = WebRequest.Create("http://s.58leke.cn/gt3/pc-geetest/ajax_validate") as HttpWebRequest;
             request.Method = "POST";
             request.KeepAlive = false;
             request.ContentType = "application/x-www-form-urlencoded;charset=UTF-8";
