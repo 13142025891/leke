@@ -22,7 +22,7 @@ namespace leke
         public static void Do(User u, string cookie)
         {
             Log(ConsoleColor.Green, $"{u.Account} 已开始刷任务，请等待。。。");
-            WeiXinHelper.SendText("13142025891", $"{u.Account} 已经登录成功，开始刷任务请等待。。。", false);
+            WeiXinHelper.SendText(u.WeiXinId, $"{u.Account} 已经登录成功，开始刷任务请等待。。。", false);
             while (true)
             {
                 var hours = DateTime.Now.Hour;
