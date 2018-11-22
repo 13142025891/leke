@@ -20,6 +20,8 @@ namespace leke
         public static int Interval;
         public static int Begin;
         public static int End;
+
+        public static int TaskInterval;
         public static List<int> ListHours;
         public static ConcurrentDictionary<string, User> dic;
         public static MessageBoxShow a1;
@@ -34,6 +36,7 @@ namespace leke
         {
             refrenshTime = DateTime.Now.AddDays(-1);
             Interval = 20000;
+            TaskInterval = 5;
             Begin = 8;
             End = 22;
             dic = new ConcurrentDictionary<string, User>();
@@ -314,6 +317,13 @@ namespace leke
                         Interval = interval;
                     }
                     Interval = Interval < 10000 ? 10000 : Interval;
+
+                    if (int.TryParse(textBox1.Text, out int taskinterval))
+                    {
+                        TaskInterval = taskinterval;
+                    }
+                    TaskInterval = TaskInterval < 5 ? 5 : TaskInterval;
+
                     if (int.TryParse(textBox3.Text, out int begin))
                     {
                         Begin = begin;
@@ -404,9 +414,10 @@ namespace leke
                                 return 1;
                             });
 
-                            System.Threading.Thread.Sleep(1000 * 10);
                             if (u.PC)
                             {
+
+                                System.Threading.Thread.Sleep(1000 * 10);
                                 Task.Run(() =>
                                 {
                                     try
@@ -445,7 +456,7 @@ namespace leke
                                 });
                             }
 
-                            System.Threading.Thread.Sleep(10000);
+                            System.Threading.Thread.Sleep(1000*60* TaskInterval);
                         }
 
                     }
@@ -514,6 +525,11 @@ namespace leke
         private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.Cancel = false;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
