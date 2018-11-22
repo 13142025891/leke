@@ -12,17 +12,17 @@ namespace leke
 {
     public class helper
     {
-        public const string logUrl = "http://s.58leke.com/index.php?s=/Index/login.html";
+        public const string logUrl = "http://s.58leke.cn/index.php?s=/Index/login.html";
 
 
 
-        public const string taskurl = "http://s.58leke.com/index.php?s=/Indexajax/taskset.html";
+        public const string taskurl = "http://s.58leke.cn/index.php?s=/Indexajax/taskset.html";
 
 
         public static void Do(User u, string cookie)
         {
             Log(ConsoleColor.Green, $"{u.Account} 已开始刷任务，请等待。。。");
-            WeiXinHelper.SendText("13142025891", $"{u.Account} 已经登录成功，开始刷任务请等待。。。", false);
+            WeiXinHelper.SendText(u.WeiXinId, $"{u.Account} 已经登录成功，开始刷任务请等待。。。", false);
             while (true)
             {
                 var hours = DateTime.Now.Hour;
@@ -84,6 +84,7 @@ namespace leke
                         Log(ConsoleColor.Green, $"{u.Account}   {r.msgs}");
                         WeiXinHelper.SendText(u.WeiXinId, $"{u.Account}  已经刷到任务，马上去做吧！", false);
                         WeiXinHelper.CreateLog(u.Account, $"{u.Account}  已经刷到任务，马上去做吧！", 1);
+                        WeiXinHelper.CreateLog("success", $"{u.Account}  已经刷到任务，马上去做吧！", 1);
                         System.Threading.Thread.Sleep(1000 * 60 * 5);
                     }
                     else if (r.msgs.Contains("您还有进行中的任务没完成") || r.msgs.Contains("评价") || r.msgs.Contains("工单未处理"))
@@ -359,7 +360,7 @@ namespace leke
             //设置打开页面的参数
             TimeSpan cha = (DateTime.Now - TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1)));
 
-            request = WebRequest.Create("http://s.58leke.com/gt3/pc-geetest/register?t=" + cha.TotalSeconds) as HttpWebRequest;
+            request = WebRequest.Create("http://s.58leke.cn/gt3/pc-geetest/register?t=" + cha.TotalSeconds) as HttpWebRequest;
             request.Method = "GET";
             request.KeepAlive = false;
             request.AllowAutoRedirect = false;
@@ -378,7 +379,7 @@ namespace leke
             Log(ConsoleColor.Yellow, $"{account}  调用乐客验证码数据成功！{srcString}");
             WeiXinHelper.CreateLog(account, $"{account}  调用乐客验证码数据成功！{srcString}", 3);
             sb.AppendLine($"{account}  调用乐客验证码数据成功！{srcString}");
-            HttpWebRequest request1 = WebRequest.Create($"http://jiyanapi.c2567.com/shibie?gt={jArray.gt}&challenge={jArray.challenge}&referer=http://s.58leke.com&user=13142025891&pass=anye520fei&return=json&model=3&format=utf8") as HttpWebRequest;
+            HttpWebRequest request1 = WebRequest.Create($"http://jiyanapi.c2567.com/shibie?gt={jArray.gt}&challenge={jArray.challenge}&referer=http://s.58leke.cn&user=13142025891&pass=anye520fei&return=json&model=3&format=utf8") as HttpWebRequest;
             request1.Method = "GET";
             request1.KeepAlive = false;
             request1.AllowAutoRedirect = false;
@@ -422,7 +423,7 @@ namespace leke
             byte[] postData = Encoding.ASCII.GetBytes(postString);
 
             // 设置提交的相关参数
-            HttpWebRequest request = WebRequest.Create("http://s.58leke.com/gt3/pc-geetest/ajax_validate") as HttpWebRequest;
+            HttpWebRequest request = WebRequest.Create("http://s.58leke.cn/gt3/pc-geetest/ajax_validate") as HttpWebRequest;
             request.Method = "POST";
             request.KeepAlive = false;
             request.ContentType = "application/x-www-form-urlencoded;charset=UTF-8";
