@@ -80,6 +80,7 @@ namespace leke
                         Log(ConsoleColor.Green, $"{u.Account}   {r.msgs}");
                         WeiXinHelper.SendText(u.WeiXinId, $"手机端 {u.Account}  已经刷到任务，马上去做吧！", false);
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}  已经刷到任务，马上去做吧！", 1);
+                        WeiXinHelper.CreateLog("success", $"wap {u.Account}  已经刷到任务，马上去做吧！", 1);
                         System.Threading.Thread.Sleep(1000 * 60 * 5);
                     }
                      
