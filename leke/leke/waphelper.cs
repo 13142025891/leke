@@ -66,7 +66,7 @@ namespace leke
                     }
                     else if (r.code == "8")
                     {
-                        System.Threading.Thread.Sleep(1000 * 60*20);
+                        System.Threading.Thread.Sleep(1000 * 60*30);
                     }
                     else if (r.code == "2")//登录超时
                     {
@@ -401,6 +401,7 @@ namespace leke
             Log(ConsoleColor.Yellow, $"{account}  调用乐客验证码数据成功！{srcString}");
             WeiXinHelper.CreateLog("wap" + account, $"{account}  调用乐客验证码数据成功！{srcString}", 3);
             sb.AppendLine($"{account}  调用乐客验证码数据成功！{srcString}");
+            //http://jiyan.c2567.com/index.php/login/index.html
             HttpWebRequest request1 = WebRequest.Create($"http://jiyanapi.c2567.com/shibie?gt={jArray.gt}&challenge={jArray.challenge}&referer=http://s.58leke.cn&user=13142025891&pass=anye520fei&return=json&model=3&format=utf8") as HttpWebRequest;
             request1.Method = "GET";
             request1.KeepAlive = false;
