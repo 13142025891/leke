@@ -71,11 +71,11 @@ namespace leke
                     }
                     else if (r.code == "8")
                     {
-                        System.Threading.Thread.Sleep(1000 * 60*5);
+                        System.Threading.Thread.Sleep(1000 * 60*20);
                     }
                     else if (r.code == "2")//登录超时
                     {
-                        WeiXinHelper.SendText("", $"手机端 {u.Account}  {r.msgs}", true);
+                        WeiXinHelper.SendText("", $"{u.Account}  {r.msgs}", false);
                     }
                     else if (r.code == "1")
                     {
@@ -113,7 +113,7 @@ namespace leke
 
                         Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}，明天{Main.Begin}点开始刷！！");
                         WeiXinHelper.CreateLog(u.Account, $"{u.Account}   {r.msgs} ，明天{Main.Begin}点开始刷！！", 1);
-                        WeiXinHelper.SendText(u.WeiXinId, $"{u.Account}   {r.msgs}，！明天{Main.Begin}点开始刷！！", true);
+                        WeiXinHelper.SendText(u.WeiXinId, $"{u.Account}   {r.msgs}，！明天{Main.Begin}点开始刷！！", false);
                         u.IsComplete = false;
                         u.IsMax = true;
                         return;
@@ -132,13 +132,13 @@ namespace leke
                 {
                     Log(ConsoleColor.Red, $"{u.Account} 刷任务出错，error: {er.Message} ");
                     WeiXinHelper.CreateLog(u.Account, $"{u.Account} 刷任务出错，error: {er.Message} ", 2);
-                    System.Threading.Thread.Sleep(1000 * 10);
+                    System.Threading.Thread.Sleep(1000 * 20);
                 }
                 catch (Exception e)
                 {
                     Log(ConsoleColor.Red, $"{u.Account} 返回出错，error: {e.Message} ");
                     WeiXinHelper.CreateLog(u.Account, $"{u.Account} 返回出错，error: {e.Message} ", 2);
-                    System.Threading.Thread.Sleep(1000 * 10);
+                    System.Threading.Thread.Sleep(1000 *20);
                 }
 
 
