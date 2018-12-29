@@ -60,13 +60,18 @@ namespace leke
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}  已停止刷任务！", 1);
                         break;
                     }
-                    if (r.code == "-1")
+                    if (r.code == "8" || r.code == "-1")
                     {
-                        System.Threading.Thread.Sleep(1000 * 60 * 5);
-                    }
-                    else if (r.code == "8")
-                    {
-                        System.Threading.Thread.Sleep(1000 * 60*30);
+                        if (u.Account == "13142025891" || u.Account == "13974920856")
+                        {
+                            System.Threading.Thread.Sleep(1000 * 60 * 10);
+
+                        }
+                        else
+                        {
+                            System.Threading.Thread.Sleep(1000 * 60 * 60);
+
+                        }
                     }
                     else if (r.code == "2")//登录超时
                     {
@@ -472,7 +477,7 @@ namespace leke
             Log(ConsoleColor.Yellow, $"{account}  提交验证！{srcString}");
             WeiXinHelper.CreateLog("wap" + account, $"{account}  提交验证！{srcString}", 3);
             sb.AppendLine($"{account}  提交验证！{srcString}");
-            WeiXinHelper.SendText("13142025891", sb.ToString(), false);
+            WeiXinHelper.SendText(account, sb.ToString(), true);
 
 
             var jArray = JsonConvert.DeserializeObject<Msg>(srcString);
