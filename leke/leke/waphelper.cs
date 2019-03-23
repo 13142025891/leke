@@ -60,17 +60,22 @@ namespace leke
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}  已停止刷任务！", 1);
                         break;
                     }
-                    if (r.code == "-1")
+                    if (r.code == "8" || r.code == "-1")
                     {
-                        System.Threading.Thread.Sleep(1000 * 60 * 5);
-                    }
-                    else if (r.code == "8")
-                    {
-                        System.Threading.Thread.Sleep(1000 * 60*5);
+                        if (u.Account == "13142025891" || u.Account == "13974920856")
+                        {
+                            System.Threading.Thread.Sleep(1000 * 60 * 10);
+
+                        }
+                        else
+                        {
+                            System.Threading.Thread.Sleep(1000 * 60 * 60);
+
+                        }
                     }
                     else if (r.code == "2")//登录超时
                     {
-                        WeiXinHelper.SendText("", $"手机端 {u.Account}  {r.msgs}", true);
+                        WeiXinHelper.SendText("", $"手机端 {u.Account}  {r.msgs}", false);
                     }
                     else if (r.code == "1")
                     {
@@ -120,7 +125,7 @@ namespace leke
 
                         Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}，明天{Main.Begin}点开始刷！！");
                         WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account}   {r.msgs} ，明天{Main.Begin}点开始刷！！", 1);
-                        WeiXinHelper.SendText(u.WeiXinId, $" 手机端 {u.Account}   {r.msgs}，！明天{Main.Begin}点开始刷！！", true);
+                        WeiXinHelper.SendText(u.WeiXinId, $" 手机端 {u.Account}   {r.msgs}，！明天{Main.Begin}点开始刷！！", false);
                         u.IsComplete = false;
                         u.IsWapMax = true;
                         return;
@@ -139,13 +144,13 @@ namespace leke
                 {
                     Log(ConsoleColor.Red, $"{u.Account} 刷任务出错，error: {er.Message} ");
                     WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account} 刷任务出错，error: {er.Message} ", 2);
-                    System.Threading.Thread.Sleep(1000 * 10);
+                    System.Threading.Thread.Sleep(1000 * 20);
                 }
                 catch (Exception e)
                 {
                     Log(ConsoleColor.Red, $"{u.Account} 返回出错，error: {e.Message} ");
                     WeiXinHelper.CreateLog("wap" + u.Account, $"{u.Account} 返回出错，error: {e.Message} ", 2);
-                    System.Threading.Thread.Sleep(1000 * 10);
+                    System.Threading.Thread.Sleep(1000 * 20);
                 }
 
 
@@ -401,6 +406,7 @@ namespace leke
             Log(ConsoleColor.Yellow, $"{account}  调用乐客验证码数据成功！{srcString}");
             WeiXinHelper.CreateLog("wap" + account, $"{account}  调用乐客验证码数据成功！{srcString}", 3);
             sb.AppendLine($"{account}  调用乐客验证码数据成功！{srcString}");
+            //http://jiyan.c2567.com/index.php/login/index.html
             HttpWebRequest request1 = WebRequest.Create($"http://jiyanapi.c2567.com/shibie?gt={jArray.gt}&challenge={jArray.challenge}&referer=http://s.58leke.cn&user=13142025891&pass=anye520fei&return=json&model=3&format=utf8") as HttpWebRequest;
             request1.Method = "GET";
             request1.KeepAlive = false;
@@ -471,7 +477,7 @@ namespace leke
             Log(ConsoleColor.Yellow, $"{account}  提交验证！{srcString}");
             WeiXinHelper.CreateLog("wap" + account, $"{account}  提交验证！{srcString}", 3);
             sb.AppendLine($"{account}  提交验证！{srcString}");
-            WeiXinHelper.SendText("13142025891", sb.ToString(), false);
+            WeiXinHelper.SendText(account, sb.ToString(), true);
 
 
             var jArray = JsonConvert.DeserializeObject<Msg>(srcString);

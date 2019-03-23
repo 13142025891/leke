@@ -482,7 +482,7 @@ namespace leke
                     if (dic.TryGetValue(d, out User u))
                     {
                         u.cancelToken.Cancel();
-                        WeiXinHelper.SendText(u.Account, $"{u.Account} 已停止刷任务。", true);
+                        WeiXinHelper.SendText(u.Account, $"{u.Account} 已停止刷任务。", false);
                     }
                 }
                 isRun = false;

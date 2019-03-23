@@ -65,17 +65,22 @@ namespace leke
                     u.IsMax = false;
                     r = Getdingdan(u.Account, cookie);
 
-                    if (r.code == "-1")
+                  
+                     if (r.code == "8"|| r.code == "-1")
                     {
-                        System.Threading.Thread.Sleep(1000 * 60 * 5);
-                    }
-                    else if (r.code == "8")
-                    {
-                        System.Threading.Thread.Sleep(1000 * 60*5);
+                        if (u.Account == "13142025891" || u.Account == "13974920856")
+                        {
+                            System.Threading.Thread.Sleep(1000 * 60 * 10);
+
+                        }
+                        else { 
+                        System.Threading.Thread.Sleep(1000 * 60*60);
+
+                        }
                     }
                     else if (r.code == "2")//登录超时
                     {
-                        WeiXinHelper.SendText("", $"手机端 {u.Account}  {r.msgs}", true);
+                        WeiXinHelper.SendText("", $"{u.Account}  {r.msgs}", false);
                     }
                     else if (r.code == "1")
                     {
@@ -113,7 +118,7 @@ namespace leke
 
                         Log(ConsoleColor.Yellow, $"{u.Account}   {r.msgs}，明天{Main.Begin}点开始刷！！");
                         WeiXinHelper.CreateLog(u.Account, $"{u.Account}   {r.msgs} ，明天{Main.Begin}点开始刷！！", 1);
-                        WeiXinHelper.SendText(u.WeiXinId, $"{u.Account}   {r.msgs}，！明天{Main.Begin}点开始刷！！", true);
+                        WeiXinHelper.SendText(u.WeiXinId, $"{u.Account}   {r.msgs}，！明天{Main.Begin}点开始刷！！", false);
                         u.IsComplete = false;
                         u.IsMax = true;
                         return;
@@ -132,13 +137,13 @@ namespace leke
                 {
                     Log(ConsoleColor.Red, $"{u.Account} 刷任务出错，error: {er.Message} ");
                     WeiXinHelper.CreateLog(u.Account, $"{u.Account} 刷任务出错，error: {er.Message} ", 2);
-                    System.Threading.Thread.Sleep(1000 * 10);
+                    System.Threading.Thread.Sleep(1000 * 20);
                 }
                 catch (Exception e)
                 {
                     Log(ConsoleColor.Red, $"{u.Account} 返回出错，error: {e.Message} ");
                     WeiXinHelper.CreateLog(u.Account, $"{u.Account} 返回出错，error: {e.Message} ", 2);
-                    System.Threading.Thread.Sleep(1000 * 10);
+                    System.Threading.Thread.Sleep(1000 *20);
                 }
 
 
@@ -449,7 +454,7 @@ namespace leke
             Log(ConsoleColor.Yellow, $"{account}  提交验证！{srcString}");
             WeiXinHelper.CreateLog(account, $"{account}  提交验证！{srcString}", 3);
             sb.AppendLine($"{account}  提交验证！{srcString}");
-            WeiXinHelper.SendText("13142025891", sb.ToString(), false);
+            WeiXinHelper.SendText(account, sb.ToString(), true);
 
 
             var jArray = JsonConvert.DeserializeObject<Msg>(srcString);
