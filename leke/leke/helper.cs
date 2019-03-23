@@ -269,7 +269,7 @@ namespace leke
             postParams.Add("task_type", "1");
             postParams.Add("app", "1");
             postParams.Add("pc", "2");
-            postParams.Add("maxmoney", "2000");
+            ///postParams.Add("maxmoney", "2000");
 
             postParams.Add("hasCaptcha", "0");
             postParams.Add("captcha_code", "");

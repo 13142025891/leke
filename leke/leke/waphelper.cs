@@ -281,7 +281,7 @@ namespace leke
            
             postParams.Add("task_type", type);
 
-            postParams.Add("maxmoney", "2000");
+            //postParams.Add("maxmoney", "2000");
 
 
             //task_type=1&app=1&pc=2&maxmoney=2000&hasCaptcha=0&captcha_code=&
